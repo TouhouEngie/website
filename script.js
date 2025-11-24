@@ -1,60 +1,52 @@
 // TODO: Maybe copyparty is a little too slow for my needs?
 const json = "https://comment-walt-warrior-donated.trycloudflare.com/drive/webpage_data";
-const topBar = document.querySelector("#topbar");
-const dock = document.querySelector("#desktopApps");
 var largestIndex = 1;
 var selectedIcon = undefined;
 var audio = null;
 var appList = undefined;
 
 // navbar logic
-const goUp = document.querySelector("#moveup");
 var a = 0;
-goUp.addEventListener('click', function() {
-  const galleryContent = document.querySelector("#gallerycontents");
-  const filepath = document.querySelector("#filepath");
-  galleryContent.innerHTML = '';
-  filepath.innerHTML = '/';
-  gallery();
-  // this will work for now but will have to redo logic later
+$(function() {
+  $("#moveup").on("click", (function() {
+    $("#gallerycontents").html('');
+    $("#filepath").html('/');
+    gallery();
+    // this will work for now but will have to redo logic later
+  }));
 });
-
 configureSettings();
 
 async function setWindows() {
   appList = await getJsonData(json, "applist.json");
   // set all them variables for them windows
   // image viewer is called within gallery, so skip that
-  for (var i = 0; i < appList.length; i++) {
-    var app = appList[i].title;
-    var namer = appList[i].mainId;
-    eval('var ' + namer + "Screen = document.querySelector(`#" + app + "`);");
-    eval('var ' + namer + "ScreenClose = document.querySelector(`#" + app + "close`);");
-    eval(namer + "ScreenClose.addEventListener('click', function() { closeWindow(" + namer + "Screen); });");
-    if (i > 0) {
-      eval('var ' + namer + "ScreenOpen = document.querySelector(`#" + app + "open`);");
-      if (i < 6) {
-        eval(namer + "ScreenOpen.addEventListener('click', function() { openWindow(" + namer + "Screen); });");
-      } else {
-        eval(namer + "ScreenOpen.addEventListener('click', function() { iconTap(" + namer + "Screen, '" + app + "'); });");
+  $(function() {
+    for (let i = 0; i < appList.length; i++) {
+      let app = appList[i].title;
+      $(`#` + app + `close`).on("click", (function() { console.log("close"); closeWindow(`#` + app) })); // could just do $("#app")
+      if (i > 0) {
+        if (i < 6) {
+          $(`#` + app + `open`).on("click", (function() { console.log("open"); openWindow(`#` + app) }));
+        } else {
+          $(`#` + app + `open`).on("click", (function() { console.log("open"); iconTap(app) }));
+        }
       }
+      dragElement(app);
     }
-    // there are currently only 4 apps only accessible from the top bar. Other apps are accessible from the dock, or in a future implementation if necessary, a launchpad-style folder.
-    dragElement(document.getElementById(app));
-  }
+  });
 }
 setWindows();
 
 // the lone dropdown menu
-const dropdownMenu = document.querySelector("#dropdownmenu");
-const dropdownMenuOpen = document.querySelector("#dropdownopen");
-dropdownMenuOpen.addEventListener('click', function(event) { 
+$("#dropdownopen").on("click", function(event) {
   event.stopPropagation();
-  openWindow(dropdownMenu);
+  openWindow("#dropdownmenu");
 });
-document.addEventListener('click', function() {
-  closeWindow(dropdownMenu);
+$(document).on("click", function() {
+  closeWindow("#dropdownmenu");
 });
+
 
 function setOutsideCookie(name, event) {
     event.preventDefault();
@@ -146,7 +138,7 @@ async function getJsonData(url, file) {
 }
 
 // consult blog.json for the content array
-async function noteview() {
+async function noteviewStart() {
   const blog = await getJsonData(json, "blog.json");
   const notesContent = document.querySelector('#notescontent');
   const top = document.querySelector("#history");
@@ -164,7 +156,7 @@ async function noteview() {
   configureSettings();
 }
 
-async function gallery() {
+async function galleryStart() {
   const galleryStructure = await getJsonData(json, "gallery.json");
   
   for (var i = 0; i < galleryStructure.length; i++) {
@@ -195,16 +187,16 @@ async function gallery() {
   }
 }
 
-function gamedemo() {
+function gamedemoStart() {
   document.querySelector("#thing").innerHTML = `<iframe class="cursor-[url('./cursors/normal.cur'),default]" frameborder="0" src="https://itch.io/embed-upload/15081350?color=333333" allowfullscreen="" width="640" height="380"><a href="https://smirbyrneh420.itch.io/together-or-never-demo">Itch.io link</a></iframe>`;
 }
 
-function email() {
+function emailStart() {
   // TODO: Buy a domain to migrate from GitHub Pages to another provider for PHP and MySQL support
   return;
 }
 
-function interwebz() {
+function interwebzStart() {
   return;
 }
 
@@ -212,7 +204,7 @@ function refreshToHomeScreen() {
   document.getElementById("webview").src = "https://comment-walt-warrior-donated.trycloudflare.com/";
 }
 
-function python() {
+function pythonStart() {
   return;
 }
 
@@ -231,7 +223,7 @@ async function parseAsTextDoc() {
   });
 }
 
-async function musicplayer() {
+async function musicplayerStart() {
   const target = document.querySelector("#playlist");
   const pauseButton = document.querySelector("#pause");
   const playlist = await getJsonData(json, "music.json");
@@ -447,46 +439,47 @@ function convertToProperMinutesOrSeconds(minutes) {
 }
 
 // window management.sys
-function dragElement(element) {
+function dragElement(appu) {
   var initialX = 0;
   var initialY = 0;
   var currentX = 0;
   var currentY = 0;
   var newX = 0;
   var newY = 0;
+  const app = "#" + appu;
+  const header = app + "header";
 
   // Check if there is a special header element associated with the draggable element.
-  if (document.getElementById(element.id + "header")) {
+  if ($(header).length) {
     // drag from header only
-    document.getElementById(element.id + "header").onmousedown = startDragging;
+    $(header).on("mousedown", function(e) { startDragging(e) });
   } else {
     // drag from anywhere
-    element.onmousedown = startDragging;
+    $(app).on("mousedown", function(e) { startDragging(e) });
   }
 
   // capture the initial mouse position and set up event listeners
   function startDragging(e) {
-    e = e || window.event;
     e.preventDefault();
-    reorganizeWindows(element);
+    reorganizeWindows(app);
     // initial mouse pos
     initialX = e.clientX;
     initialY = e.clientY;
-    document.onmouseup = stopDragging;
-    document.onmousemove = elementDrag;
+    $(document).on("mouseup", function() { stopDragging(); });
+    $(document).on("mousemove", function() { elementDrag(e); });
   }
 
   // checks mouse position and drags window accordingly, with limitations
   function elementDrag(e) {
-    e = e || window.event;
     e.preventDefault();
+    var offset = $(app).offset();
     currentX = initialX - e.clientX;
     currentY = initialY - e.clientY;
     initialX = e.clientX;
     initialY = e.clientY;
     // I inverted these at one point...
-    newY = element.offsetTop - currentY;
-    newX = element.offsetLeft - currentX;
+    newY = offset.top - currentY;
+    newX = offset.left - currentX;
     if (newX < 0) {
       stopDragging();
       newX = 1;
@@ -495,21 +488,21 @@ function dragElement(element) {
       stopDragging();
       newY = 1;
     }
-    if (newX > (document.documentElement.clientWidth)) {
+    if (newX > ($(document).width())) {
       stopDragging();
-      newX = document.documentElement.clientWidth - 32;
+      newX = $(document).width() - 32;
     }
-    if (newY > document.documentElement.clientHeight) {
+    if (newY > ($(document).height())) {
       stopDragging();
-      newY = document.documentElement.clientHeight - 32;
+      newY = $(document).height() - 32;
     }
-    element.style.top = (newY) + "px";
-    element.style.left = (newX) + "px";
+    $(app).css("top", (newY) + "px");
+    $(app).css("left", (newX) + "px");
   }
 
   function stopDragging() {
-    document.onmouseup = null;
-    document.onmousemove = null;
+    $(document).off("mouseup.drag");
+    $(document).off("mousemove");
   }
 }
 
@@ -519,25 +512,31 @@ function refresh() {
 
 // icon and window stuffs
 
-function iconTap(window, id) {
-    loadApp(id);
+function iconTap(window) {
+    loadApp(window);
     openWindow(window);
 }
 
 function closeWindow(element) {
-    element.style.display = "none"
+  $(function() {
+    $(element).addClass("hidden");
+    $(element).removeClass("block");
+  });
 }
 
 function openWindow(element) {
-    element.style.display = "block"
+    $(element).addClass("block");
+    $(element).removeClass("hidden");
     reorganizeWindows(element);
 }
 
 function reorganizeWindows(element) {
-  largestIndex = largestIndex + 1;
-  element.style.zIndex = largestIndex;
-  topBar.style.zIndex = largestIndex + 1;
-  dock.style.zIndex = largestIndex + 1;
+  $(function() {
+    largestIndex = largestIndex + 1;
+    $(element).css("zIndex", largestIndex);
+    $("#topbar").css("zIndex", largestIndex + 1);
+    $("#desktopApps").css("zIndex", largestIndex + 1);
+  });
 }
 
 function windowTap(element) {
@@ -548,7 +547,7 @@ function windowTap(element) {
 function loadApp(ignition) {
   var index = appList.findIndex(a => a.title === ignition);
   if (!(appList[index].hasBeenOpened)) { 
-    eval(ignition + "();");
+    eval(ignition + "Start();");
     appList[index].hasBeenOpened = true;
   } else { return; }
 }
