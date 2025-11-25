@@ -11,7 +11,7 @@ $(function() {
   $("#moveup").on("click", (function() {
     $("#gallerycontents").html('');
     $("#filepath").html('/');
-    gallery();
+    galleryStart();
     // this will work for now but will have to redo logic later
   }));
 });
@@ -24,15 +24,15 @@ async function setWindows() {
   $(function() {
     for (let i = 0; i < appList.length; i++) {
       let app = appList[i].title;
-      $(`#` + app + `close`).on("click", (function() { console.log("close"); closeWindow(`#` + app) })); // could just do $("#app")
+      $(`#` + app + `close`).on("click", (function() { closeWindow("#" + app) })); // could just do $("#app")
       if (i > 0) {
         if (i < 6) {
-          $(`#` + app + `open`).on("click", (function() { console.log("open"); openWindow(`#` + app) }));
+          $(`#` + app + `open`).on("click", (function() { openWindow("#" + app) }));
         } else {
-          $(`#` + app + `open`).on("click", (function() { console.log("open"); iconTap(app) }));
+          $(`#` + app + `open`).on("click", (function() { iconTap(app) }));
         }
       }
-      dragElement(app);
+      dragElement("#" + app);
     }
   });
 }
@@ -119,6 +119,7 @@ function configureSettings() {
 
     function setCursors(list, target, replacer) {
       for (var i = 0; i < list.length; i++) {
+        // if it ain't broke don't fix this
         list[i].classList.replace(target, replacer);
       }
     }
@@ -144,7 +145,7 @@ async function noteviewStart() {
   for (let i = 0; i < blog.length; i++) {
     var note = blog[i];
     var newEntry = $("<div>");
-    newEntry.addClass("border-solid", "border-2", "rounded-md", "bg-gray-900", "pointer");
+    newEntry.addClass("border-solid").addClass("border-2").addClass("rounded-md").addClass("bg-gray-900").addClass("pointer");
     newEntry.html(`<p>${note.title} (${note.date})</p>`);
     newEntry.on("click", function() {
       $('#notescontent').html(blog[i].content);
@@ -175,12 +176,12 @@ async function galleryStart() {
         } 
       });
     } else {
-      newEntry.addEventListener("click", function() {
-        $("imgviewcontents").html(inputArray[index].contents);
+      newEntry.on("click", function() {
+        $("#imgviewcontents").html(inputArray[index].contents);
         openWindow($("#imgview"));
       });
     }
-    $("#galleryContents").append(newEntry);
+    $("#gallerycontents").append(newEntry);
   }
 }
 
@@ -244,15 +245,15 @@ async function musicplayerStart() {
     })(song));
     $("#playlist").append(newSong);
   }
-  $("#pausebutton").on('click', function() {
+  $("#pause").on('click', function() {
     if (!audio.paused) {
       // context.suspend();
       audio.pause();
-      $("#pausebutton").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`);
+      $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`);
     } else {
       // context.resume();
       audio.play();
-      $("#pausebutton").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`);
+      $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`);
     }
   });
 
@@ -300,7 +301,7 @@ async function musicplayerStart() {
     var variName = eval(vari);
     newClass = variName ? "fill-cyan-500" : "fill-white";
     original = variName ? "fill-white" : "fill-cyan-500";
-    $("#" + vari + "button").addClass(newClass).removeClass(original);
+    $("#" + vari).addClass(newClass).removeClass(original);
     newClass = variName ? "stroke-cyan-500" : "stroke-white";
     original = variName ? "stroke-white" : "stroke-cyan-500";
      $("#" + vari + "stroke").addClass(newClass).removeClass(original);
@@ -325,7 +326,7 @@ async function musicplayerStart() {
     document.querySelector("#songauthor").innerHTML = `<p>${song.author}</p>`;
     $('#pausebutton').html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`);
     audio.addEventListener('timeupdate', function() {
-      $("seekbar").val((this.currentTime / this.duration) * 100);
+      $("#seekbar").val((this.currentTime / this.duration) * 100);
       currentProgressInSeconds = convertToProperMinutesOrSeconds(Math.round(this.currentTime) % 60);
       totalProgressInSeconds = convertToProperMinutesOrSeconds(Math.round(this.duration) % 60);
       $("#seekprogress").html(`${(Math.floor(Math.round(this.currentTime) / 60))}:${currentProgressInSeconds}`);
@@ -431,70 +432,87 @@ function convertToProperMinutesOrSeconds(minutes) {
 }
 
 // window management.sys
-function dragElement(appu) {
+function dragElement(app) {
   var initialX = 0;
   var initialY = 0;
   var currentX = 0;
   var currentY = 0;
   var newX = 0;
   var newY = 0;
-  const app = "#" + appu;
   const header = app + "header";
 
   // Check if there is a special header element associated with the draggable element.
   if ($(header).length) {
     // drag from header only
-    $(header).on("mousedown", function(e) { startDragging(e) });
+    $(header).on("mousedown", function(event) { startDragging(event) });
   } else {
     // drag from anywhere
-    $(app).on("mousedown", function(e) { startDragging(e) });
+    $(app).on("mousedown", function(event) { startDragging(event) });
   }
 
   // capture the initial mouse position and set up event listeners
   function startDragging(e) {
-    e.preventDefault();
-    reorganizeWindows(app);
-    // initial mouse pos
-    initialX = e.clientX;
-    initialY = e.clientY;
-    $(document).on("mouseup", function() { stopDragging(); });
-    $(document).on("mousemove", function() { elementDrag(e); });
+    $(function() {
+      e = e || window.event;
+      e.preventDefault();
+      reorganizeWindows(app);
+      // initial mouse pos
+      console.log(e.clientX);
+      console.log(e.clientY);
+      initialX = e.clientX;
+      initialY = e.clientY;
+      $(document).on("mouseup", function() { stopDragging(); });
+      $(document).on("mousemove", function() { elementDrag(e); });
+    });
   }
 
   // checks mouse position and drags window accordingly, with limitations
   function elementDrag(e) {
-    e.preventDefault();
-    var offset = $(app).offset();
-    currentX = initialX - e.clientX;
-    currentY = initialY - e.clientY;
-    initialX = e.clientX;
-    initialY = e.clientY;
-    // I inverted these at one point...
-    newY = offset.top - currentY;
-    newX = offset.left - currentX;
-    if (newX < 0) {
-      stopDragging();
-      newX = 1;
-    }
-    if (newY < 0) {
-      stopDragging();
-      newY = 1;
-    }
-    if (newX > ($(document).width())) {
-      stopDragging();
-      newX = $(document).width() - 32;
-    }
-    if (newY > ($(document).height())) {
-      stopDragging();
-      newY = $(document).height() - 32;
-    }
-    $(app).css("top", (newY) + "px");
-    $(app).css("left", (newX) + "px");
+    $(function() {
+      e = e || window.event;
+      e.preventDefault();
+      var offset = $(app).position();
+      console.log("header");
+      console.log(e.clientX);
+      console.log(e.clientY);
+      currentX = initialX - e.clientX;
+      currentY = initialY - e.clientY;
+      console.log("footer");
+      console.log(currentX);
+      console.log(currentY);
+      initialX = e.clientX;
+      initialY = e.clientY;
+      // I inverted these at one point...
+      newY = offset.top - currentY;
+      newX = offset.left - currentX;
+      if (newX < 0) {
+        stopDragging();
+        newX = 1;
+      }
+      if (newY < 0) {
+        stopDragging();
+        newY = 1;
+      }
+      if (newX > ($(document).width())) {
+        stopDragging();
+        newX = $(document).width() - 32;
+      }
+      if (newY > ($(document).height())) {
+        stopDragging();
+        newY = $(document).height() - 32;
+      }
+      console.log("set window to " + newY);
+      $(app).css("top", (newY) + "px");
+      console.log("set window to " + newX);
+      $(app).css("left", (newX) + "px");
+    });
   }
 
   function stopDragging() {
-    $(document).off("mouseup.drag");
-    $(document).off("mousemove");
+    $(function() {
+      $(document).off("mouseup");
+      $(document).off("mousemove");
+    });
   }
 }
 
@@ -503,10 +521,12 @@ function refresh() {
 }
 
 // icon and window stuffs
+// Most requires a # preceding the string
 
+// Takes a string, no #
 function iconTap(window) {
     loadApp(window);
-    openWindow(window);
+    openWindow("#" + window);
 }
 
 function closeWindow(element) {
@@ -517,9 +537,11 @@ function closeWindow(element) {
 }
 
 function openWindow(element) {
+  $(function() {
     $(element).addClass("block");
     $(element).removeClass("hidden");
     reorganizeWindows(element);
+  });
 }
 
 function reorganizeWindows(element) {
@@ -536,6 +558,7 @@ function windowTap(element) {
   deselectIcon(selectedIcon);
 }
 
+// This takes a string, no #
 function loadApp(ignition) {
   var index = appList.findIndex(a => a.title === ignition);
   if (!(appList[index].hasBeenOpened)) { 
