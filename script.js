@@ -1,60 +1,52 @@
 // TODO: Maybe copyparty is a little too slow for my needs?
 const json = "https://comment-walt-warrior-donated.trycloudflare.com/drive/webpage_data";
-const topBar = document.querySelector("#topbar");
-const dock = document.querySelector("#desktopApps");
 var largestIndex = 1;
 var selectedIcon = undefined;
 var audio = null;
 var appList = undefined;
 
 // navbar logic
-const goUp = document.querySelector("#moveup");
 var a = 0;
-goUp.addEventListener('click', function() {
-  const galleryContent = document.querySelector("#gallerycontents");
-  const filepath = document.querySelector("#filepath");
-  galleryContent.innerHTML = '';
-  filepath.innerHTML = '/';
-  gallery();
-  // this will work for now but will have to redo logic later
+$(function() {
+  $("#moveup").on("click", (function() {
+    $("#gallerycontents").html('');
+    $("#filepath").html('/');
+    galleryStart();
+    // this will work for now but will have to redo logic later
+  }));
 });
-
 configureSettings();
 
 async function setWindows() {
   appList = await getJsonData(json, "applist.json");
   // set all them variables for them windows
   // image viewer is called within gallery, so skip that
-  for (var i = 0; i < appList.length; i++) {
-    var app = appList[i].title;
-    var namer = appList[i].mainId;
-    eval('var ' + namer + "Screen = document.querySelector(`#" + app + "`);");
-    eval('var ' + namer + "ScreenClose = document.querySelector(`#" + app + "close`);");
-    eval(namer + "ScreenClose.addEventListener('click', function() { closeWindow(" + namer + "Screen); });");
-    if (i > 0) {
-      eval('var ' + namer + "ScreenOpen = document.querySelector(`#" + app + "open`);");
-      if (i < 6) {
-        eval(namer + "ScreenOpen.addEventListener('click', function() { openWindow(" + namer + "Screen); });");
-      } else {
-        eval(namer + "ScreenOpen.addEventListener('click', function() { iconTap(" + namer + "Screen, '" + app + "'); });");
+  $(function() {
+    for (let i = 0; i < appList.length; i++) {
+      let app = appList[i].title;
+      $(`#` + app + `close`).on("click", (function() { closeWindow("#" + app) })); // could just do $("#app")
+      if (i > 0) {
+        if (i < 6) {
+          $(`#` + app + `open`).on("click", (function() { openWindow("#" + app) }));
+        } else {
+          $(`#` + app + `open`).on("click", (function() { iconTap(app) }));
+        }
       }
+      dragElement("#" + app);
     }
-    // there are currently only 4 apps only accessible from the top bar. Other apps are accessible from the dock, or in a future implementation if necessary, a launchpad-style folder.
-    dragElement(document.getElementById(app));
-  }
+  });
 }
 setWindows();
 
 // the lone dropdown menu
-const dropdownMenu = document.querySelector("#dropdownmenu");
-const dropdownMenuOpen = document.querySelector("#dropdownopen");
-dropdownMenuOpen.addEventListener('click', function(event) { 
+$("#dropdownopen").on("click", function(event) {
   event.stopPropagation();
-  openWindow(dropdownMenu);
+  openWindow("#dropdownmenu");
 });
-document.addEventListener('click', function() {
-  closeWindow(dropdownMenu);
+$(document).on("click", function() {
+  closeWindow("#dropdownmenu");
 });
+
 
 function setOutsideCookie(name, event) {
     event.preventDefault();
@@ -103,9 +95,10 @@ function configureSettings() {
   */
   function configureCursor(num) {
     num = num || 1
-    const cursorPointer = document.querySelectorAll(".pointer");
-    const cursorDefault = document.querySelectorAll(".normal");
-    const cursorText = document.querySelectorAll(".text");
+    // note: this may be an issue later on
+    const cursorPointer = $(".pointer");
+    const cursorDefault = $(".normal");
+    const cursorText = $(".text");
     var param = ["cursor-", "0", "-", "~"];
     var a = getCookie("cursor");
     param[1] = num.toString();
@@ -118,7 +111,7 @@ function configureSettings() {
       var text = arr.join('');
       if (cursor.length < 1) {
         arr[1] = a;
-        cursor = document.querySelectorAll(arr.join(''));
+        cursor = $(arr.join(''));
         style = arr.join('');
       }
       setCursors(cursor, style, text);
@@ -126,6 +119,7 @@ function configureSettings() {
 
     function setCursors(list, target, replacer) {
       for (var i = 0; i < list.length; i++) {
+        // if it ain't broke don't fix this
         list[i].classList.replace(target, replacer);
       }
     }
@@ -146,25 +140,23 @@ async function getJsonData(url, file) {
 }
 
 // consult blog.json for the content array
-async function noteview() {
+async function noteviewStart() {
   const blog = await getJsonData(json, "blog.json");
-  const notesContent = document.querySelector('#notescontent');
-  const top = document.querySelector("#history");
   for (let i = 0; i < blog.length; i++) {
     var note = blog[i];
-    var newEntry = document.createElement("div");
-    newEntry.classList.add("border-solid", "border-2", "rounded-md", "bg-gray-900", "pointer");
-    newEntry.innerHTML = `<p>${note.title} (${note.date})</p>`;
-    newEntry.addEventListener("click", function() {
-      notesContent.innerHTML = blog[i].content;
+    var newEntry = $("<div>");
+    newEntry.addClass("border-solid").addClass("border-2").addClass("rounded-md").addClass("bg-gray-900").addClass("pointer");
+    newEntry.html(`<p>${note.title} (${note.date})</p>`);
+    newEntry.on("click", function() {
+      $('#notescontent').html(blog[i].content);
     });
-    top.appendChild(newEntry);
+    $("#history").append(newEntry);
   }
-  notesContent.innerHTML = blog[0].content;
+  $('#notescontent').html(blog[0].content);
   configureSettings();
 }
 
-async function gallery() {
+async function galleryStart() {
   const galleryStructure = await getJsonData(json, "gallery.json");
   
   for (var i = 0; i < galleryStructure.length; i++) {
@@ -173,46 +165,44 @@ async function gallery() {
   }
   // consult gallery.json for the file structure array
   function setGalleryContent(inputArray, index) {
-    const galleryContent = document.querySelector("#gallerycontents");
-    const filePath = document.querySelector("#filepath");
-    var newEntry = document.createElement("span");
-    newEntry.innerHTML = `<img class="w-20 h-20" src="${inputArray[index].image}"><p class="break-all text-sm">${inputArray[index].name}</p>`;
+    var newEntry = $("<span>");
+    newEntry.html(`<img class="w-20 h-20" src="${inputArray[index].image}"><p class="break-all text-sm">${inputArray[index].name}</p>`);
     if (inputArray[index].isFolder) {
-      newEntry.addEventListener("click", function() {
-        galleryContent.innerHTML = '';
-        filePath.innerHTML = '/' + inputArray[index].name + '/';
+      newEntry.on("click", function() {
+        $("#gallerycontents").html('');
+        $("#filepath").html('/' + inputArray[index].name + '/');
         for (var i = 0; i < inputArray[index].contents.length; i++) {
           setGalleryContent(inputArray[index].contents, i);
         } 
       });
     } else {
-      newEntry.addEventListener("click", function() {
-        document.getElementById("imgviewcontents").innerHTML = inputArray[index].contents;
-        openWindow(document.querySelector("#imgview"));
+      newEntry.on("click", function() {
+        $("#imgviewcontents").html(inputArray[index].contents);
+        openWindow($("#imgview"));
       });
     }
-    galleryContent.appendChild(newEntry);
+    $("#gallerycontents").append(newEntry);
   }
 }
 
-function gamedemo() {
-  document.querySelector("#thing").innerHTML = `<iframe class="cursor-[url('./cursors/normal.cur'),default]" frameborder="0" src="https://itch.io/embed-upload/15081350?color=333333" allowfullscreen="" width="640" height="380"><a href="https://smirbyrneh420.itch.io/together-or-never-demo">Itch.io link</a></iframe>`;
+function gamedemoStart() {
+  $("#thing").html(`<iframe class="cursor-[url('./cursors/normal.cur'),default]" frameborder="0" src="https://itch.io/embed-upload/15081350?color=333333" allowfullscreen="" width="640" height="380"><a href="https://smirbyrneh420.itch.io/together-or-never-demo">Itch.io link</a></iframe>`);
 }
 
-function email() {
+function emailStart() {
   // TODO: Buy a domain to migrate from GitHub Pages to another provider for PHP and MySQL support
   return;
 }
 
-function interwebz() {
+function interwebzStart() {
   return;
 }
 
 function refreshToHomeScreen() {
-  document.getElementById("webview").src = "https://comment-walt-warrior-donated.trycloudflare.com/";
+  $("#webview").attr('src', "https://comment-walt-warrior-donated.trycloudflare.com/");
 }
 
-function python() {
+function pythonStart() {
   return;
 }
 
@@ -231,9 +221,7 @@ async function parseAsTextDoc() {
   });
 }
 
-async function musicplayer() {
-  const target = document.querySelector("#playlist");
-  const pauseButton = document.querySelector("#pause");
+async function musicplayerStart() {
   const playlist = await getJsonData(json, "music.json");
   var shuffle = false;
   var repeat = false;
@@ -246,31 +234,31 @@ async function musicplayer() {
   // var analyser = context.createAnalyser();
   for (let i = 0; i < playlist.length; i++) {
     var song = playlist[i];
-    var newSong = document.createElement("li");
-    newSong.classList.add("pointer");
-    newSong.innerHTML = `<p>${song.title}</p><p class="text-xs">${song.author}</p><br>`;
-    newSong.addEventListener('click', (function(currentSong) {
+    var newSong = $('<li>');
+    newSong.add("pointer");
+    newSong.html(`<p>${song.title}</p><p class="text-xs">${song.author}</p><br>`);
+    newSong.on('click', (function(currentSong) {
       return function() {
         // is only called once but it's one hell of a logic segment
         playSong(currentSong);
       };
     })(song));
-    target.appendChild(newSong);
+    $("#playlist").append(newSong);
   }
-  pauseButton.addEventListener('click', function() {
+  $("#pause").on('click', function() {
     if (!audio.paused) {
       // context.suspend();
       audio.pause();
-      pauseButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`;
+      $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`);
     } else {
       // context.resume();
       audio.play();
-      pauseButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`;
+      $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`);
     }
   });
 
   // Set the buttons and shuffle functionality
-  document.querySelector("#shuffle").addEventListener('click', function() {
+  $("#shuffle").on('click', function() {
     var temp = 0;
     while (shuffleOrder.length <= (playlist.length - 1)) {
       temp = Math.abs(Math.round((Math.random() * playlist.length) - 1));
@@ -283,10 +271,10 @@ async function musicplayer() {
       playSong(playlist[shuffleOrder[increment]]);
     }
   });
-  document.querySelector("#repeat").addEventListener('click', function() {
+  $("#repeat").on('click', function() {
     setSvgAndStuff('repeat');
   });
-  document.querySelector("#nextsong").addEventListener('click', function() {
+  $("#nextsong").on('click', function() {
     if (shuffle) {
       increment++;
       playNextSong(playlist[shuffleOrder[increment]]);
@@ -296,7 +284,7 @@ async function musicplayer() {
       playNextSong(playlist[index+1]);
     }
   });
-  document.querySelector("#rewind").addEventListener('click', function() {
+  $("#rewind").on('click', function() {
     if (shuffle) {
       increment--;
       playNextSong(playlist[shuffleOrder[increment]]);
@@ -313,10 +301,10 @@ async function musicplayer() {
     var variName = eval(vari);
     newClass = variName ? "fill-cyan-500" : "fill-white";
     original = variName ? "fill-white" : "fill-cyan-500";
-    eval(`document.querySelector("#` + vari + `button").classList.replace(original, newClass)`);
+    $("#" + vari).addClass(newClass).removeClass(original);
     newClass = variName ? "stroke-cyan-500" : "stroke-white";
     original = variName ? "stroke-white" : "stroke-cyan-500";
-    eval(`document.querySelector("#` + vari + `stroke").classList.replace(original, newClass)`);
+     $("#" + vari + "stroke").addClass(newClass).removeClass(original);
   }
 
   function playSong(song) {
@@ -325,9 +313,6 @@ async function musicplayer() {
     // basically the equivalent of taking an integral of a derivative.
     // takes the index of a song in the array
     index = playlist.findIndex(s => s.title === song.title && s.author === song.author);
-    const seekbar = document.querySelector("#seekbar");
-    const seekleft = document.querySelector("#seekprogress");
-    const seekright = document.querySelector("#totalprogress");
     var currentProgressInSeconds = 0;
     var totalProgressInSeconds = 0;
     if (audio) {
@@ -336,16 +321,16 @@ async function musicplayer() {
     }
     audio = new Audio(json.concat(song.file));
     audio.crossOrigin = "anonymous";
-    document.querySelector("#thumbnail").innerHTML = `<img src="${json.concat(song.image)}">`;
-    document.querySelector("#songtitle").innerHTML = `<h3>${song.title}</h3>`;
-    document.querySelector("#songauthor").innerHTML = `<p>${song.author}</p>`;
-    pauseButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`;
+    $("#thumbnail").html(`<img src="${json.concat(song.image)}">`);
+    4("#songtitle").html(`<h3>${song.title}</h3>`);
+    $("#songauthor").html(`<p>${song.author}</p>`);
+    $('#pausebutton').html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`);
     audio.addEventListener('timeupdate', function() {
-      seekbar.value = (this.currentTime / this.duration) * 100;
+      $("#seekbar").val((this.currentTime / this.duration) * 100);
       currentProgressInSeconds = convertToProperMinutesOrSeconds(Math.round(this.currentTime) % 60);
       totalProgressInSeconds = convertToProperMinutesOrSeconds(Math.round(this.duration) % 60);
-      seekleft.innerHTML = `${(Math.floor(Math.round(this.currentTime) / 60))}:${currentProgressInSeconds}`;
-      seekright.innerHTML = `${Math.floor(Math.round(this.duration) / 60)}:${totalProgressInSeconds}`;
+      $("#seekprogress").html(`${(Math.floor(Math.round(this.currentTime) / 60))}:${currentProgressInSeconds}`);
+      $("#totalprogress").html(`${Math.floor(Math.round(this.duration) / 60)}:${totalProgressInSeconds}`);
     });
     // The following logic initializes UI, then plays audio, then sets event listeners to check for headphone input or song ending
     seekbar.addEventListener('input', function() {
@@ -366,17 +351,17 @@ async function musicplayer() {
       }
     });
     audio.addEventListener('pause', function() {
-      pauseButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`;
+      $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`);
     });
     audio.addEventListener('play', function() {
-      pauseButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`;
+      $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`);
     });
   }
   function playNextSong(song) {
     if (song) {
       playSong(song);
     } else {
-      pauseButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`;
+      $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`);
       audio.pause();
     }
   }
@@ -388,14 +373,13 @@ async function musicplayer() {
       src.connect(analyser);
       analyser.connect(context.destination);
     }
-    var canvas = document.getElementById("canvas");
-    var ctx = canvas.getContext("2d");
+    var ctx = $("#canvas")[0].getContext("2d");
     analyser.fftSize = 256;
     var bufferLength = analyser.frequencyBinCount;
     console.log(bufferLength);
     var dataArray = new Uint8Array(bufferLength);
-    var WIDTH = canvas.width;
-    var HEIGHT = canvas.height;
+    var WIDTH = $("#canvas").width;
+    var HEIGHT = $("#canvas").height;
     var barWidth = (WIDTH / bufferLength) * 2.5;
     var barHeight;
     var x = 0;
@@ -435,7 +419,7 @@ function time() {
     minute = convertToProperMinutesOrSeconds(minute);
 
     const actualDate = `${hour}:${minute} ${period}`;
-    document.getElementById("time").innerHTML = actualDate;
+    $("#time").html(actualDate);
 }
 time();
 setInterval(time, 1000);
@@ -447,46 +431,48 @@ function convertToProperMinutesOrSeconds(minutes) {
 }
 
 // window management.sys
-function dragElement(element) {
+function dragElement(app) {
   var initialX = 0;
   var initialY = 0;
   var currentX = 0;
   var currentY = 0;
   var newX = 0;
   var newY = 0;
+  const header = app + "header";
 
-  // Check if there is a special header element associated with the draggable element.
-  if (document.getElementById(element.id + "header")) {
-    // drag from header only
-    document.getElementById(element.id + "header").onmousedown = startDragging;
+  if ($(header).length) {
+    $(header).on("mousedown", function(event) { startDragging(event) });
   } else {
-    // drag from anywhere
-    element.onmousedown = startDragging;
+    $(app).on("mousedown", function(event) { startDragging(event) });
   }
 
   // capture the initial mouse position and set up event listeners
   function startDragging(e) {
-    e = e || window.event;
-    e.preventDefault();
-    reorganizeWindows(element);
-    // initial mouse pos
-    initialX = e.clientX;
-    initialY = e.clientY;
-    document.onmouseup = stopDragging;
-    document.onmousemove = elementDrag;
+    $(function() {
+      e = e || window.event;
+      e.preventDefault();
+      reorganizeWindows(app);
+      // initial mouse pos
+      initialX = e.clientX;
+      initialY = e.clientY;
+      $(document).on("mouseup", function() { stopDragging(); });
+      $(document).on("mousemove",  elementDrag);
+    });
   }
 
   // checks mouse position and drags window accordingly, with limitations
+  // note to self: this has to load before the DOM
   function elementDrag(e) {
     e = e || window.event;
     e.preventDefault();
+    var offset = $(app).position();
     currentX = initialX - e.clientX;
     currentY = initialY - e.clientY;
     initialX = e.clientX;
     initialY = e.clientY;
     // I inverted these at one point...
-    newY = element.offsetTop - currentY;
-    newX = element.offsetLeft - currentX;
+    newY = offset.top - currentY;
+    newX = offset.left - currentX;
     if (newX < 0) {
       stopDragging();
       newX = 1;
@@ -495,21 +481,23 @@ function dragElement(element) {
       stopDragging();
       newY = 1;
     }
-    if (newX > (document.documentElement.clientWidth)) {
+    if (newX > ($(window).width())) {
       stopDragging();
-      newX = document.documentElement.clientWidth - 32;
+      newX = $(window).width() - 32;
     }
-    if (newY > document.documentElement.clientHeight) {
+    if (newY > ($(window).height())) {
       stopDragging();
-      newY = document.documentElement.clientHeight - 32;
+      newY = $(window).height() - 32;
     }
-    element.style.top = (newY) + "px";
-    element.style.left = (newX) + "px";
+    $(app).css("top", (newY) + "px");
+    $(app).css("left", (newX) + "px");
   }
 
   function stopDragging() {
-    document.onmouseup = null;
-    document.onmousemove = null;
+    $(function() {
+      $(document).off("mouseup");
+      $(document).off("mousemove");
+    });
   }
 }
 
@@ -518,26 +506,36 @@ function refresh() {
 }
 
 // icon and window stuffs
+// Most requires a # preceding the string
 
-function iconTap(window, id) {
-    loadApp(id);
-    openWindow(window);
+// Takes a string, no #
+function iconTap(window) {
+    loadApp(window);
+    openWindow("#" + window);
 }
 
 function closeWindow(element) {
-    element.style.display = "none"
+  $(function() {
+    $(element).addClass("hidden");
+    $(element).removeClass("block");
+  });
 }
 
 function openWindow(element) {
-    element.style.display = "block"
+  $(function() {
+    $(element).addClass("block");
+    $(element).removeClass("hidden");
     reorganizeWindows(element);
+  });
 }
 
 function reorganizeWindows(element) {
-  largestIndex = largestIndex + 1;
-  element.style.zIndex = largestIndex;
-  topBar.style.zIndex = largestIndex + 1;
-  dock.style.zIndex = largestIndex + 1;
+  $(function() {
+    largestIndex = largestIndex + 1;
+    $(element).css("zIndex", largestIndex);
+    $("#topbar").css("zIndex", largestIndex + 1);
+    $("#desktopApps").css("zIndex", largestIndex + 1);
+  });
 }
 
 function windowTap(element) {
@@ -545,10 +543,11 @@ function windowTap(element) {
   deselectIcon(selectedIcon);
 }
 
+// This takes a string, no #
 function loadApp(ignition) {
   var index = appList.findIndex(a => a.title === ignition);
   if (!(appList[index].hasBeenOpened)) { 
-    eval(ignition + "();");
+    eval(ignition + "Start();");
     appList[index].hasBeenOpened = true;
   } else { return; }
 }
