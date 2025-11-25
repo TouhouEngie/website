@@ -199,7 +199,7 @@ function interwebzStart() {
 }
 
 function refreshToHomeScreen() {
-  document.getElementById("webview").src = "https://comment-walt-warrior-donated.trycloudflare.com/";
+  $("#webview").attr('src', "https://comment-walt-warrior-donated.trycloudflare.com/");
 }
 
 function pythonStart() {
@@ -321,9 +321,9 @@ async function musicplayerStart() {
     }
     audio = new Audio(json.concat(song.file));
     audio.crossOrigin = "anonymous";
-    document.querySelector("#thumbnail").innerHTML = `<img src="${json.concat(song.image)}">`;
-    document.querySelector("#songtitle").innerHTML = `<h3>${song.title}</h3>`;
-    document.querySelector("#songauthor").innerHTML = `<p>${song.author}</p>`;
+    $("#thumbnail").html(`<img src="${json.concat(song.image)}">`);
+    4("#songtitle").html(`<h3>${song.title}</h3>`);
+    $("#songauthor").html(`<p>${song.author}</p>`);
     $('#pausebutton').html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`);
     audio.addEventListener('timeupdate', function() {
       $("#seekbar").val((this.currentTime / this.duration) * 100);
@@ -373,14 +373,13 @@ async function musicplayerStart() {
       src.connect(analyser);
       analyser.connect(context.destination);
     }
-    var canvas = document.getElementById("canvas");
-    var ctx = canvas.getContext("2d");
+    var ctx = $("#canvas")[0].getContext("2d");
     analyser.fftSize = 256;
     var bufferLength = analyser.frequencyBinCount;
     console.log(bufferLength);
     var dataArray = new Uint8Array(bufferLength);
-    var WIDTH = canvas.width;
-    var HEIGHT = canvas.height;
+    var WIDTH = $("#canvas").width;
+    var HEIGHT = $("#canvas").height;
     var barWidth = (WIDTH / bufferLength) * 2.5;
     var barHeight;
     var x = 0;
@@ -441,12 +440,9 @@ function dragElement(app) {
   var newY = 0;
   const header = app + "header";
 
-  // Check if there is a special header element associated with the draggable element.
   if ($(header).length) {
-    // drag from header only
     $(header).on("mousedown", function(event) { startDragging(event) });
   } else {
-    // drag from anywhere
     $(app).on("mousedown", function(event) { startDragging(event) });
   }
 
@@ -457,55 +453,44 @@ function dragElement(app) {
       e.preventDefault();
       reorganizeWindows(app);
       // initial mouse pos
-      console.log(e.clientX);
-      console.log(e.clientY);
       initialX = e.clientX;
       initialY = e.clientY;
       $(document).on("mouseup", function() { stopDragging(); });
-      $(document).on("mousemove", function() { elementDrag(e); });
+      $(document).on("mousemove",  elementDrag);
     });
   }
 
   // checks mouse position and drags window accordingly, with limitations
+  // note to self: this has to load before the DOM
   function elementDrag(e) {
-    $(function() {
-      e = e || window.event;
-      e.preventDefault();
-      var offset = $(app).position();
-      console.log("header");
-      console.log(e.clientX);
-      console.log(e.clientY);
-      currentX = initialX - e.clientX;
-      currentY = initialY - e.clientY;
-      console.log("footer");
-      console.log(currentX);
-      console.log(currentY);
-      initialX = e.clientX;
-      initialY = e.clientY;
-      // I inverted these at one point...
-      newY = offset.top - currentY;
-      newX = offset.left - currentX;
-      if (newX < 0) {
-        stopDragging();
-        newX = 1;
-      }
-      if (newY < 0) {
-        stopDragging();
-        newY = 1;
-      }
-      if (newX > ($(document).width())) {
-        stopDragging();
-        newX = $(document).width() - 32;
-      }
-      if (newY > ($(document).height())) {
-        stopDragging();
-        newY = $(document).height() - 32;
-      }
-      console.log("set window to " + newY);
-      $(app).css("top", (newY) + "px");
-      console.log("set window to " + newX);
-      $(app).css("left", (newX) + "px");
-    });
+    e = e || window.event;
+    e.preventDefault();
+    var offset = $(app).position();
+    currentX = initialX - e.clientX;
+    currentY = initialY - e.clientY;
+    initialX = e.clientX;
+    initialY = e.clientY;
+    // I inverted these at one point...
+    newY = offset.top - currentY;
+    newX = offset.left - currentX;
+    if (newX < 0) {
+      stopDragging();
+      newX = 1;
+    }
+    if (newY < 0) {
+      stopDragging();
+      newY = 1;
+    }
+    if (newX > ($(window).width())) {
+      stopDragging();
+      newX = $(window).width() - 32;
+    }
+    if (newY > ($(window).height())) {
+      stopDragging();
+      newY = $(window).height() - 32;
+    }
+    $(app).css("top", (newY) + "px");
+    $(app).css("left", (newX) + "px");
   }
 
   function stopDragging() {
