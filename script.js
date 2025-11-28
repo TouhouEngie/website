@@ -48,8 +48,12 @@ $(document).on("click", function() {
 });
 $("#time").on("click", function(event) {
   event.stopPropagation();
-  openWindow("#datewidget");
-})
+  if ($("#datewidget").is(":visible")) {
+    closeWindow("#datewidget");
+  } else {
+    openWindow("#datewidget");
+  }
+});
 
 
 function setOutsideCookie(name, event) {

@@ -803,6 +803,11 @@
       height: fit-content;
     }
   }
+  .sm\:w-69 {
+    @media (width >= 40rem) {
+      width: calc(var(--spacing) * 69);
+    }
+  }
   .sm\:w-70 {
     @media (width >= 40rem) {
       width: calc(var(--spacing) * 70);
