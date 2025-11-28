@@ -1,7 +1,5 @@
-// TODO: Maybe copyparty is a little too slow for my needs?
 const json = "https://comment-walt-warrior-donated.trycloudflare.com/drive/webpage_data";
 var largestIndex = 1;
-var selectedIcon = undefined;
 var audio = null;
 var appList = undefined;
 
@@ -186,7 +184,9 @@ async function galleryStart() {
 }
 
 function gamedemoStart() {
-  $("#thing").html(`<iframe class="cursor-[url('./cursors/normal.cur'),default]" frameborder="0" src="https://itch.io/embed-upload/15081350?color=333333" allowfullscreen="" width="640" height="380"><a href="https://smirbyrneh420.itch.io/together-or-never-demo">Itch.io link</a></iframe>`);
+  $("#thingbutton").on("click", function() {
+    $("#thing").html(`<iframe class="cursor-[url('./cursors/normal.cur'),default]" frameborder="0" src="https://itch.io/embed-upload/15081350?color=333333" allowfullscreen="" width="640" height="380"><a href="https://smirbyrneh420.itch.io/together-or-never-demo">Itch.io link</a></iframe>`);
+  });
 }
 
 function emailStart() {
@@ -391,14 +391,11 @@ async function musicplayerStart() {
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
       for (var i = 0; i < bufferLength; i++) {
         barHeight = dataArray[i] / 1.5 - 50;
-        
         var r = barHeight + (25 * (i/bufferLength));
         var g = 250 * (i/bufferLength);
         var b = 50;
-
         ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
         ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
-
         x += barWidth + 1;
       }
     }
@@ -536,11 +533,6 @@ function reorganizeWindows(element) {
     $("#topbar").css("zIndex", largestIndex + 1);
     $("#desktopApps").css("zIndex", largestIndex + 1);
   });
-}
-
-function windowTap(element) {
-  reorganizeWindows(element);
-  deselectIcon(selectedIcon);
 }
 
 // This takes a string, no #

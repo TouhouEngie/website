@@ -688,6 +688,13 @@
       }
     }
   }
+  .hover\:bg-sky-300 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-sky-300);
+      }
+    }
+  }
   .sm\:left-1\/2 {
     @media (width >= 40rem) {
       left: calc(1/2 * 100%);
