@@ -2,6 +2,7 @@ const json = "https://comment-walt-warrior-donated.trycloudflare.com/drive/webpa
 var largestIndex = 1;
 var audio = null;
 var appList = undefined;
+const deez = new Date();
 
 // navbar logic
 var a = 0;
@@ -43,7 +44,12 @@ $("#dropdownopen").on("click", function(event) {
 });
 $(document).on("click", function() {
   closeWindow("#dropdownmenu");
+  closeWindow("#datewidget");
 });
+$("#time").on("click", function(event) {
+  event.stopPropagation();
+  openWindow("#datewidget");
+})
 
 
 function setOutsideCookie(name, event) {
@@ -406,20 +412,50 @@ async function musicplayerStart() {
 }
 
 function time() {
-    const deez = new Date();
-    let hour = deez.getHours();
-    let minute = deez.getMinutes();
-    let period = hour >= 12 ? "PM" : "AM";
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const monthOfYear = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    
+    let day = deez.getDate();
+    let num = deez.getMonth();
+    let month = monthOfYear[num];
+    let year = deez.getFullYear();
+    let weekday = daysOfWeek[deez.getDay()];
+    
+    const actualDate = `${weekday}, ${month} ${day}, ${year}`;
+    $("#date").html(actualDate);
+    setCalendar(num, year);
 
-    hour = hour % 12;
-    hour = hour ? hour : 12;
-    minute = convertToProperMinutesOrSeconds(minute);
+    function daysInMonth(month, year) {
+      return new Date(year, (month+1), 0).getDate();
+    }
 
-    const actualDate = `${hour}:${minute} ${period}`;
-    $("#time").html(actualDate);
+    function setCalendar(month, year) {
+      let nutz = new Date(year + "-" + (month+1) + "-01").getDay();
+      for (var i = 0; i <= nutz; i++) {
+        $("#calendar").append('<p></p>');
+      }
+      for (var i = 1; i <= daysInMonth(month, year); i++) {
+        $("#calendar").append(`<p>${i}</p>`);
+      }
+    }
 }
+
+function timePerSecond() {
+  let hour = deez.getHours();
+  let minute = deez.getMinutes();
+  let period = hour >= 12 ? "PM" : "AM";
+
+  hour = hour % 12;
+  hour = hour ? hour : 12;
+  minute = convertToProperMinutesOrSeconds(minute);
+
+  const actualTime = `${hour}:${minute} ${period}`;
+  $("#time").html(actualTime);
+}
+
 time();
-setInterval(time, 1000);
+timePerSecond();
+setInterval(timePerSecond, 1000);
 
 // used for both mp3 player and current time
 function convertToProperMinutesOrSeconds(minutes) {
