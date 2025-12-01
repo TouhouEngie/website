@@ -463,6 +463,7 @@ async function getCalendarDates(month) {
       $("#event").html(`${month} ${calendar[index].dates[i].day} - ${calendar[index].dates[i].desc}`);
     });
   }
+  configureCursor();
 }
 
 function timePerSecond() {
