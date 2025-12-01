@@ -14,7 +14,7 @@ $(function() {
     // this will work for now but will have to redo logic later
   }));
 });
-configureSettings();
+configureCursor();
 
 async function setWindows() {
   appList = await getJsonData(json, "applist.json");
@@ -44,7 +44,6 @@ $("#dropdownopen").on("click", function(event) {
 });
 $(document).on("click", function() {
   closeWindow("#dropdownmenu");
-  closeWindow("#datewidget");
 });
 $("#time").on("click", function(event) {
   event.stopPropagation();
@@ -101,7 +100,12 @@ function configureSettings() {
     setCookie('visualizer', '1', 365);
   }
   */
-  function configureCursor(num) {
+  function setVisualizer(flag) {
+    // test
+  }
+}
+
+function configureCursor(num) {
     num = num || 1
     // note: this may be an issue later on
     const cursorPointer = $(".pointer");
@@ -132,10 +136,6 @@ function configureSettings() {
       }
     }
   }
-  function setVisualizer(flag) {
-    // test
-  }
-}
 
 async function getJsonData(url, file) {
   var finale = [];
@@ -161,7 +161,7 @@ async function noteviewStart() {
     $("#history").append(newEntry);
   }
   $('#notescontent').html(blog[0].content);
-  configureSettings();
+  configureCursor();
 }
 
 async function galleryStart() {
@@ -173,7 +173,7 @@ async function galleryStart() {
   }
   // consult gallery.json for the file structure array
   function setGalleryContent(inputArray, index) {
-    var newEntry = $("<span>");
+    var newEntry = $("<span class='pointer'>");
     newEntry.html(`<img class="w-20 h-20" src="${inputArray[index].image}"><p class="break-all text-sm">${inputArray[index].name}</p>`);
     if (inputArray[index].isFolder) {
       newEntry.on("click", function() {
@@ -181,7 +181,8 @@ async function galleryStart() {
         $("#filepath").html('/' + inputArray[index].name + '/');
         for (var i = 0; i < inputArray[index].contents.length; i++) {
           setGalleryContent(inputArray[index].contents, i);
-        } 
+        }
+        configureCursor();
       });
     } else {
       newEntry.on("click", function() {
@@ -191,6 +192,7 @@ async function galleryStart() {
     }
     $("#gallerycontents").append(newEntry);
   }
+  configureCursor();
 }
 
 function gamedemoStart() {
@@ -305,7 +307,7 @@ async function musicplayerStart() {
     }
   });
 
-  configureSettings();
+  configureCursor();
   function setSvgAndStuff(vari) {
     eval(vari + ` = !(` + vari + `)`);
     var variName = eval(vari);
@@ -427,21 +429,40 @@ function time() {
     
     const actualDate = `${weekday}, ${month} ${day}, ${year}`;
     $("#date").html(actualDate);
-    setCalendar(num, year);
+    setCalendar(num, year, month);
 
     function daysInMonth(month, year) {
       return new Date(year, (month+1), 0).getDate();
     }
 
-    function setCalendar(month, year) {
+    function setCalendar(month, year, wordMonth) {
       let nutz = new Date(year + "-" + (month+1) + "-01").getDay();
       for (var i = 0; i <= nutz; i++) {
         $("#calendar").append('<p></p>');
       }
       for (var i = 1; i <= daysInMonth(month, year); i++) {
-        $("#calendar").append(`<p>${i}</p>`);
+        $("#calendar").append(`<p id="entry${i}" class="text-center">${i}</p>`);
       }
+      getCalendarDates(wordMonth);
     }
+  }
+
+async function getCalendarDates(month) {
+  const calendar = await getJsonData(json, "calendar.json");
+  var index = calendar.findIndex(c => c.month === month);
+  if (index < 0) {
+    return;
+  }
+  for (let i = 0; i < calendar[index].dates.length; i++) {
+    var entry = `#entry${calendar[index].dates[i].day}`;
+    $(entry).addClass("pointer");
+    $(entry).addClass(calendar[index].dates[i].color);
+    $(entry).addClass("hover:bg-sky-400");
+    $(entry).addClass("active:bg-sky-600");
+    $(entry).on("click", function() {
+      $("#event").html(`${month} ${calendar[index].dates[i].day} - ${calendar[index].dates[i].desc}`);
+    });
+  }
 }
 
 function timePerSecond() {
@@ -457,9 +478,10 @@ function timePerSecond() {
   $("#time").html(actualTime);
 }
 
-time();
 timePerSecond();
 setInterval(timePerSecond, 1000);
+time();
+
 
 // used for both mp3 player and current time
 function convertToProperMinutesOrSeconds(minutes) {
