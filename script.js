@@ -24,8 +24,8 @@ async function setWindows() {
     for (let i = 0; i < appList.length; i++) {
       let app = appList[i].title;
       $(`#` + app + `close`).on("click", (function() { closeWindow("#" + app) })); // could just do $("#app")
-      if (i > 0) {
-        if (i < 6) {
+      if (i > 1) {
+        if (i < 7) {
           $(`#` + app + `open`).on("click", (function() { openWindow("#" + app) }));
         } else {
           $(`#` + app + `open`).on("click", (function() { iconTap(app) }));
