@@ -14,7 +14,7 @@ $(function() {
     // this will work for now but will have to redo logic later
   }));
 });
-configureCursor();
+configureSettings();
 
 async function setWindows() {
   appList = await getJsonData(json, "applist.json");
@@ -84,7 +84,6 @@ function getCookie(cname) {
 }
 
 function configureSettings() {
-
   // check cookie
   let cursor = getCookie("cursor");
   // let visualize = getCookie('visualizer');
@@ -135,7 +134,7 @@ function configureCursor(num) {
         list[i].classList.replace(target, replacer);
       }
     }
-  }
+}
 
 async function getJsonData(url, file) {
   var finale = [];
