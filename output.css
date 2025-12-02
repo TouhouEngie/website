@@ -683,6 +683,9 @@
   .text-cyan-300 {
     color: var(--color-cyan-300);
   }
+  .text-sky-400 {
+    color: var(--color-sky-400);
+  }
   .text-white {
     color: var(--color-white);
   }
