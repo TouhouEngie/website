@@ -156,6 +156,7 @@ async function noteviewStart() {
     newEntry.html(`<p>${note.title} (${note.date})</p>`);
     newEntry.on("click", function() {
       $('#notescontent').html(blog[i].content);
+      configureCursor();
     });
     $("#history").append(newEntry);
   }
