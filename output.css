@@ -593,6 +593,9 @@
   .bg-\[url\(https\:\/\/comment-walt-warrior-donated\.trycloudflare\.com\/drive\/webpage_data\/Images\/wallpaper_mobile\.JPG\)\] {
     background-image: url(https://comment-walt-warrior-donated.trycloudflare.com/drive/webpage_data/Images/wallpaper_mobile.JPG);
   }
+  .bg-\[url\(https\:\/\/fileserver\.touhouengie\.com\/drive\/webpage_data\/Images\/wallpaper_mobile\.JPG\)\] {
+    background-image: url(https://fileserver.touhouengie.com/drive/webpage_data/Images/wallpaper_mobile.JPG);
+  }
   .bg-cover {
     background-size: cover;
   }
@@ -909,6 +912,11 @@
   .sm\:bg-\[url\(https\:\/\/comment-walt-warrior-donated\.trycloudflare\.com\/drive\/webpage_data\/wallpaper\.png\)\] {
     @media (width >= 40rem) {
       background-image: url(https://comment-walt-warrior-donated.trycloudflare.com/drive/webpage_data/wallpaper.png);
+    }
+  }
+  .sm\:bg-\[url\(https\:\/\/fileserver\.touhouengie\.com\/drive\/webpage_data\/wallpaper\.png\)\] {
+    @media (width >= 40rem) {
+      background-image: url(https://fileserver.touhouengie.com/drive/webpage_data/wallpaper.png);
     }
   }
 }

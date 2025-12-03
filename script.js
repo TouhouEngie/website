@@ -1,4 +1,4 @@
-const json = "https://comment-walt-warrior-donated.trycloudflare.com/drive/webpage_data";
+const json = "https://fileserver.touhouengie.com/drive/webpage_data";
 var largestIndex = 1;
 var audio = null;
 var appList = undefined;
@@ -211,7 +211,7 @@ function interwebzStart() {
 }
 
 function refreshToHomeScreen() {
-  $("#webview").attr('src', "https://comment-walt-warrior-donated.trycloudflare.com/");
+  $("#webview").attr('src', "https://fileserver.touhouengie.com/");
 }
 
 function pythonStart() {
@@ -224,7 +224,7 @@ async function parseAsTextDoc() {
   message = "<-- BEGIN PGP MESSAGE --> \\n".concat(message);
   message = message.concat("\\n <-- END PGP MESSAGE -->")
   // this web user is already extremely restricted anyway
-  fetch("https://comment-walt-warrior-donated.trycloudflare.com/mail/mail.txt?pw=p4ssw0rd69", {
+  fetch("https://fileserver.touhouengie.com/mail/mail.txt?pw=p4ssw0rd69", {
     method: 'PUT',
     body: message,
     headers: {
