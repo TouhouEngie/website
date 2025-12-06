@@ -237,6 +237,7 @@ function pythonStart() {
 }
 
 // i can't get this to work
+/*
 async function parseAsTextDoc() {
   var message = document.getElementById('message').value;
   message = "<-- BEGIN PGP MESSAGE --> \\n".concat(message);
@@ -250,6 +251,7 @@ async function parseAsTextDoc() {
     }
   });
 }
+*/
 
 async function musicplayerStart() {
   const playlist = await getJsonData(json, "music.json");
