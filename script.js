@@ -174,7 +174,8 @@ async function galleryStart() {
   // consult gallery.json for the file structure array
   function setGalleryContent(inputArray, index) {
     var newEntry = $("<span class='pointer'>");
-    newEntry.html(`<img class="w-20 h-20" src="${inputArray[index].image}"><p class="break-all text-sm">${inputArray[index].name}</p>`);
+    var imgsrc = setIconSource(inputArray, index);
+    newEntry.html(`<img class="w-20 h-20" src="${imgsrc}"><p class="break-all text-sm">${inputArray[index].name}</p>`);
     if (inputArray[index].isFolder) {
       newEntry.on("click", function() {
         $("#gallerycontents").html('');
@@ -186,11 +187,28 @@ async function galleryStart() {
       });
     } else {
       newEntry.on("click", function() {
-        $("#imgviewcontents").html(inputArray[index].contents);
+        $("#imgviewcontents").html(setFileSource(inputArray, index));
         openWindow($("#imgview"));
       });
     }
     $("#gallerycontents").append(newEntry);
+  }
+
+  function setIconSource(inputArray, index) {
+    if (inputArray[index].isFolder) {
+      return `${json}/Images/folder.png`;
+    }
+    if (inputArray[index].usesIconFromCopyparty) {
+      return `${json}/Images/${inputArray[index].image}`;
+    }
+    return inputArray[index].image;
+  }
+
+  function setFileSource(inputArray, index) {
+    if (inputArray[index].artFromCopyparty) {
+      return `<img src="${json}/Images/gallery/${inputArray[index].contents}">`
+    }
+    return inputArray[index].contents;
   }
   configureCursor();
 }
