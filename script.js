@@ -83,24 +83,33 @@ function getCookie(cname) {
   return "";
 }
 
+function setOutsideCheckbox() {
+  // all checkboxes (as of right now) live here. will find a more efficient way soon.
+  
+  $("#visual").on('click', function() {
+    setCookie("visualizer", document.getElementById("visual").checked, 365);
+  });
+}
+setOutsideCheckbox();
+
 function configureSettings() {
   // check cookie
   let cursor = getCookie("cursor");
-  // let visualize = getCookie('visualizer');
+  let visualize = getCookie('visualizer');
+
   if (cursor != "") {
     configureCursor(cursor);
   } else {   
     setCookie("cursor", "1", 365);
   }
-  /*
+
   if (visualize != "") {
     setVisualizer(visualize);
   } else {
-    setCookie('visualizer', '1', 365);
+    setCookie('visualizer', false, 365);
   }
-  */
   function setVisualizer(flag) {
-    // test
+    console.log(flag);
   }
 }
 
