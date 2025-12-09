@@ -498,8 +498,9 @@ async function getCalendarDates(month) {
 }
 
 function timePerSecond() {
-  let hour = deez.getHours();
-  let minute = deez.getMinutes();
+  const deez2 = new Date();
+  let hour = deez2.getHours();
+  let minute = deez2.getMinutes();
   let period = hour >= 12 ? "PM" : "AM";
 
   hour = hour % 12;
