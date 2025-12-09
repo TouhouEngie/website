@@ -17,7 +17,7 @@ $(function() {
 configureSettings();
 
 async function setWindows() {
-  appList = await getJsonData(json, "applist.json");
+  appList = await getJsonData(json, "applist2.json");
   // set all them variables for them windows
   // image viewer is called within gallery, so skip that
   $(function() {
@@ -228,11 +228,6 @@ function gamedemoStart() {
   });
 }
 
-function emailStart() {
-  // TODO: Buy a domain to migrate from GitHub Pages to another provider for PHP and MySQL support
-  return;
-}
-
 function interwebzStart() {
   return;
 }
@@ -243,16 +238,16 @@ function refreshToHomeScreen() {
 
 function pythonStart() {
   return;
-}
+} 
 
-/*
 function emailStart() {
   $('#aForm').on('submit', async function(e) {
     e.preventDefault();
     const data = Object.fromEntries(new FormData($('#aForm').get(0)).entries());
+    console.log("sending...");
     const send = await fetch("https://fileserver.touhouengie.com/mail", {
       method: "POST",
-      headers: {"Cookie": "cppwd=p4ssw0rd69"},
+      headers: { "PW": "p4ssw0rd69" },
       body: `f=${JSON.stringify(data)}`
     });
     if (res.ok) {
@@ -264,7 +259,7 @@ function emailStart() {
     }
   });
 }
-*/
+
 
 async function musicplayerStart() {
   const playlist = await getJsonData(json, "music.json");

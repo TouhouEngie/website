@@ -7,7 +7,7 @@
 .cursor-1-text { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/1/text_sel.cur'), text; }
 .cursor-2-pointer { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/2/select.cur'), pointer; }
 .cursor-2-normal { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/2/normal.cur'), default; }
-.cursor-2-text { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/2/text_sel.cur'), text; }
+.cursor-2-text { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/2/text.cur'), text; }
 
 /* python scheibe */
 td {
