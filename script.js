@@ -15,6 +15,9 @@ $(function() {
   }));
 });
 configureSettings();
+timePerSecond();
+setInterval(timePerSecond, 1000);
+time();
 
 async function setWindows() {
   appList = await getJsonData(json, "applist2.json");
@@ -506,11 +509,6 @@ function timePerSecond() {
   const actualTime = `${hour}:${minute} ${period}`;
   $("#time").html(actualTime);
 }
-
-timePerSecond();
-setInterval(timePerSecond, 1000);
-time();
-
 
 // used for both mp3 player and current time
 function convertToProperMinutesOrSeconds(minutes) {
