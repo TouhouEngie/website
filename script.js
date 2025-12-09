@@ -245,18 +245,22 @@ function pythonStart() {
   return;
 }
 
-// i can't get this to work
 /*
-async function parseAsTextDoc() {
-  var message = document.getElementById('message').value;
-  message = "<-- BEGIN PGP MESSAGE --> \\n".concat(message);
-  message = message.concat("\\n <-- END PGP MESSAGE -->")
-  // this web user is already extremely restricted anyway
-  fetch("https://fileserver.touhouengie.com/mail/mail.txt?pw=p4ssw0rd69", {
-    method: 'PUT',
-    body: message,
-    headers: {
-      "Content-Type": "text/markdown; charset=UTF-8"
+function emailStart() {
+  $('#aForm').on('submit', async function(e) {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData($('#aForm').get(0)).entries());
+    const send = await fetch("https://fileserver.touhouengie.com/mail", {
+      method: "POST",
+      headers: {"Cookie": "cppwd=p4ssw0rd69"},
+      body: `f=${JSON.stringify(data)}`
+    });
+    if (res.ok) {
+      $('#submitted').removeClass('hidden');
+      $("#form")[0].reset();
+    } else {
+      alert("Error sending message.");
+      console.error(await send.text());
     }
   });
 }

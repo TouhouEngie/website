@@ -307,7 +307,7 @@
             </div>
         </div>
 
-        <!-- deprecated
+        <!--
         <div id="email" class="border-solid rounded-xl border-4 w-full sm:w-fit absolute top-1/20 sm:left-3/10 text-white border-slate-800 bg-slate-800 hidden">
             <div id="emailheader" class="mt-2 font-semibold flex">
                 <div id="emailclose" class="w-6 h-6 bg-red-600 rounded-xl border-solid border-black border ml-3 pointer">
@@ -318,19 +318,26 @@
                 <p class="pl-2">Email Me</p>
             </div>
             <div id="emailcontent" class="bg-gray-950 m-2 mt-0 rounded-lg w-full h-full sm:w-150 sm:h-120 p-4 text-white overflow-y-scroll">
-                <p>Note: If you want a reply, please provide a method of contact. I prefer emails or Discord usernames, but phone numbers and Telegram tags are acceptable.</p>
-                <p>NOTICE: This is currently not a very secure implementation. Please refrain from directly giving out sensitive information.</p>
-                <div>
-                    <label for="message">Type your message here: </label>
-                    <textarea id="message" name="message" rows="11" cols="56" class="border border-white rounded-md text" required></textarea>
-                </div>
-                <div>
-                    <button onclick="parseAsTextDoc()" class="pointer border border-white py-2 px-4 rounded-md bg-cyan-300 hover:bg-cyan-400">Send</button>
-                </div>
+                <form id="aForm">
+                    <label class="block">
+                        <span>Name:</span>
+                        <input class="text block" type="text" name="name" placeholder="Enter your name" required>
+                    </label>
+                    <label class="block">
+                        <span>Email:</span>
+                        <input class="text block" type="email" name="email" placeholder="public@touhouengie.com" required>
+                    </label>
+                    <label class="block">
+                        <span>Message:</span>
+                        <textarea class="text block w-full h-100" name="message" placeholder="Type your message here..." required></textarea>
+                    </label>
+                    <button class="block bg-sky-500 hover:bg-sky-600 rounded-md hover:shadow-2xl px-4" type="submit">Send</button>
+                </form>
+                <p id="submitted" class="hidden">Message sent!</p>
           </div>
         </div>
         -->
-        
+
         <div id="interwebz" class="border-solid rounded-xl border-4 w-full sm:w-fit absolute top-1/10 sm:left-1/4 text-white border-slate-800 bg-slate-800 hidden overflow-hidden resize">
             <div id="interwebzheader" class="mt-2 font-semibold flex">
                 <div id="interwebzclose" class="w-6 h-6 bg-red-600 rounded-xl border-solid border-black border ml-3 pointer">
