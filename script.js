@@ -2,7 +2,7 @@ const json = "https://fileserver.touhouengie.com/drive/webpage_data";
 var largestIndex = 1;
 var audio = null;
 var appList = undefined;
-const deez = new Date();
+var deez = new Date();
 
 // navbar logic
 var a = 0;
@@ -20,7 +20,7 @@ setInterval(timePerSecond, 1000);
 time();
 
 async function setWindows() {
-  appList = await getJsonData(json, "applist2.json");
+  appList = await getJsonData(json, "applist.json");
   // set all them variables for them windows
   // image viewer is called within gallery, so skip that
   $(function() {
@@ -498,9 +498,9 @@ async function getCalendarDates(month) {
 }
 
 function timePerSecond() {
-  const deez2 = new Date();
-  let hour = deez2.getHours();
-  let minute = deez2.getMinutes();
+  deez = new Date();
+  let hour = deez.getHours();
+  let minute = deez.getMinutes();
   let period = hour >= 12 ? "PM" : "AM";
 
   hour = hour % 12;
@@ -508,6 +508,9 @@ function timePerSecond() {
   minute = convertToProperMinutesOrSeconds(minute);
 
   const actualTime = `${hour}:${minute} ${period}`;
+  if (actualTime === "12:00 AM") {
+    time();
+  }
   $("#time").html(actualTime);
 }
 
