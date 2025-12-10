@@ -474,6 +474,9 @@ function time() {
       for (var i = 1; i <= daysInMonth(month, year); i++) {
         $("#calendar").append(`<p id="entry${i}" class="text-center">${i}</p>`);
       }
+      $(`#entry${day}`).addClass("border-2");
+      $(`#entry${day}`).addClass("rounded-md");
+      $(`#entry${day}`).addClass("-translate-y-0.5");
       getCalendarDates(wordMonth);
     }
   }
