@@ -158,6 +158,15 @@ async function getJsonData(url, file) {
   return finale[0];
 }
 
+async function getLatestCommitId() {
+  fetch('https://api.github.com/repos/TouhouEngie/website/commits?per_page=1')
+    .then(res => res.json())
+    .then(res => {
+      $("#commit").html(res[0].sha.substring(0,7));
+    });
+}
+getLatestCommitId();
+
 // consult blog.json for the content array
 async function noteviewStart() {
   const blog = await getJsonData(json, "blog.json");
