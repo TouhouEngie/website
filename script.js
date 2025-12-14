@@ -1,46 +1,21 @@
+// some things just need to be global
 const json = "https://fileserver.touhouengie.com/drive/webpage_data";
 var largestIndex = 1;
 var audio = null;
 var appList = undefined;
 var deez = new Date();
 
-// navbar logic
-var a = 0;
-$(function() {
-  $("#moveup").on("click", (function() {
-    $("#gallerycontents").html('');
-    $("#filepath").html('/');
-    galleryStart();
-    // this will work for now but will have to redo logic later
-  }));
-});
+
+// call critical components before we start
 configureSettings();
 timePerSecond();
 setInterval(timePerSecond, 1000);
 time();
-
-async function setWindows() {
-  appList = await getJsonData(json, "applist.json");
-  // set all them variables for them windows
-  // image viewer is called within gallery, so skip that
-  $(function() {
-    for (let i = 0; i < appList.length; i++) {
-      let app = appList[i].title;
-      $(`#` + app + `close`).on("click", (function() { closeWindow("#" + app) })); // could just do $("#app")
-      if (i > 1) {
-        if (i < 7) {
-          $(`#` + app + `open`).on("click", (function() { openWindow("#" + app) }));
-        } else {
-          $(`#` + app + `open`).on("click", (function() { iconTap(app) }));
-        }
-      }
-      dragElement("#" + app);
-    }
-  });
-}
 setWindows();
+getLatestCommitId();
 
-// the lone dropdown menu
+
+// the lone dropdown menu (not very lonely anymore)
 $("#dropdownopen").on("click", function(event) {
   event.stopPropagation();
   openWindow("#dropdownmenu");
@@ -57,7 +32,19 @@ $("#time").on("click", function(event) {
   }
 });
 
+// navbar logic
+var a = 0;
+$(function() {
+  $("#moveup").on("click", (function() {
+    $("#gallerycontents").html('');
+    $("#filepath").html('/');
+    galleryStart();
+    // this will work for now but will have to redo logic later
+  }));
+});
 
+
+// cookie getter, setter, and applier functions
 function setOutsideCookie(name, event) {
     event.preventDefault();
     setCookie(name, event.target.value, 365);
@@ -116,6 +103,26 @@ function configureSettings() {
   }
 }
 
+
+// apply the settings from outside to inside
+async function getJsonData(url, file) {
+  var finale = [];
+  const signal = await fetch(url.concat("/json/", file));
+  const json = await signal.json();
+  for (var i in json) {
+    finale.push(json[i]);
+  }
+  return finale[0];
+}
+
+async function getLatestCommitId() {
+  fetch('https://api.github.com/repos/TouhouEngie/website/commits?per_page=1')
+    .then(res => res.json())
+    .then(res => {
+      $("#commit").html(res[0].sha.substring(0,7));
+    });
+}
+
 function configureCursor(num) {
     num = num || 1
     // note: this may be an issue later on
@@ -148,26 +155,84 @@ function configureCursor(num) {
     }
 }
 
-async function getJsonData(url, file) {
-  var finale = [];
-  const signal = await fetch(url.concat("/json/", file));
-  const json = await signal.json();
-  for (var i in json) {
-    finale.push(json[i]);
+
+function time() {
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const monthOfYear = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    
+    let day = deez.getDate();
+    let num = deez.getMonth();
+    let month = monthOfYear[num];
+    let year = deez.getFullYear();
+    let weekday = daysOfWeek[deez.getDay()];
+    
+    const actualDate = `${weekday}, ${month} ${day}, ${year}`;
+    $("#date").html(actualDate);
+    setCalendar(num, year, month);
+
+    function daysInMonth(month, year) {
+      return new Date(year, (month+1), 0).getDate();
+    }
+
+    function setCalendar(month, year, wordMonth) {
+      let nutz = new Date(year + "-" + (month+1) + "-01").getDay();
+      for (var i = 0; i <= nutz; i++) {
+        $("#calendar").append('<p></p>');
+      }
+      for (var i = 1; i <= daysInMonth(month, year); i++) {
+        $("#calendar").append(`<p id="entry${i}" class="text-center">${i}</p>`);
+      }
+      $(`#entry${day}`).addClass("border-2");
+      $(`#entry${day}`).addClass("rounded-md");
+      $(`#entry${day}`).addClass("-translate-y-0.5");
+      getCalendarDates(wordMonth);
+    }
   }
-  return finale[0];
-}
 
-async function getLatestCommitId() {
-  fetch('https://api.github.com/repos/TouhouEngie/website/commits?per_page=1')
-    .then(res => res.json())
-    .then(res => {
-      $("#commit").html(res[0].sha.substring(0,7));
+async function getCalendarDates(month) {
+  const calendar = await getJsonData(json, "calendar.json");
+  var index = calendar.findIndex(c => c.month === month);
+  if (index < 0) {
+    return;
+  }
+  for (let i = 0; i < calendar[index].dates.length; i++) {
+    var entry = `#entry${calendar[index].dates[i].day}`;
+    $(entry).addClass("pointer");
+    $(entry).addClass(calendar[index].dates[i].color);
+    $(entry).addClass("hover:bg-sky-400");
+    $(entry).addClass("active:bg-sky-600");
+    $(entry).on("click", function() {
+      $("#event").html(`${month} ${calendar[index].dates[i].day} - ${calendar[index].dates[i].desc}`);
     });
+  }
+  configureCursor();
 }
-getLatestCommitId();
 
-// consult blog.json for the content array
+function timePerSecond() {
+  deez = new Date();
+  let hour = deez.getHours();
+  let minute = deez.getMinutes();
+  let period = hour >= 12 ? "PM" : "AM";
+
+  hour = hour % 12;
+  hour = hour ? hour : 12;
+  minute = convertToProperMinutesOrSeconds(minute);
+
+  const actualTime = `${hour}:${minute} ${period}`;
+  if (actualTime === "12:00 AM") {
+    time();
+  }
+  $("#time").html(actualTime);
+}
+
+// used for both mp3 player and current time
+function convertToProperMinutesOrSeconds(minutes) {
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  return minutes;
+}
+
+
+// all apps
 async function noteviewStart() {
   const blog = await getJsonData(json, "blog.json");
   for (let i = 0; i < blog.length; i++) {
@@ -271,7 +336,6 @@ function emailStart() {
     }
   });
 }
-
 
 async function musicplayerStart() {
   const playlist = await getJsonData(json, "music.json");
@@ -457,79 +521,26 @@ async function musicplayerStart() {
   // TODO: Set visualizer as an optional (experimental) setting, and squash the syncronization bugs related with the web audio API
 }
 
-function time() {
-    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const monthOfYear = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    
-    let day = deez.getDate();
-    let num = deez.getMonth();
-    let month = monthOfYear[num];
-    let year = deez.getFullYear();
-    let weekday = daysOfWeek[deez.getDay()];
-    
-    const actualDate = `${weekday}, ${month} ${day}, ${year}`;
-    $("#date").html(actualDate);
-    setCalendar(num, year, month);
 
-    function daysInMonth(month, year) {
-      return new Date(year, (month+1), 0).getDate();
-    }
-
-    function setCalendar(month, year, wordMonth) {
-      let nutz = new Date(year + "-" + (month+1) + "-01").getDay();
-      for (var i = 0; i <= nutz; i++) {
-        $("#calendar").append('<p></p>');
+// window management all the way down
+async function setWindows() {
+  appList = await getJsonData(json, "applist.json");
+  // set all them variables for them windows
+  // image viewer is called within gallery, so skip that
+  $(function() {
+    for (let i = 0; i < appList.length; i++) {
+      let app = appList[i].title;
+      $(`#` + app + `close`).on("click", (function() { closeWindow("#" + app) })); // could just do $("#app")
+      if (i > 1) {
+        if (i < 7) {
+          $(`#` + app + `open`).on("click", (function() { openWindow("#" + app) }));
+        } else {
+          $(`#` + app + `open`).on("click", (function() { iconTap(app) }));
+        }
       }
-      for (var i = 1; i <= daysInMonth(month, year); i++) {
-        $("#calendar").append(`<p id="entry${i}" class="text-center">${i}</p>`);
-      }
-      $(`#entry${day}`).addClass("border-2");
-      $(`#entry${day}`).addClass("rounded-md");
-      $(`#entry${day}`).addClass("-translate-y-0.5");
-      getCalendarDates(wordMonth);
+      dragElement("#" + app);
     }
-  }
-
-async function getCalendarDates(month) {
-  const calendar = await getJsonData(json, "calendar.json");
-  var index = calendar.findIndex(c => c.month === month);
-  if (index < 0) {
-    return;
-  }
-  for (let i = 0; i < calendar[index].dates.length; i++) {
-    var entry = `#entry${calendar[index].dates[i].day}`;
-    $(entry).addClass("pointer");
-    $(entry).addClass(calendar[index].dates[i].color);
-    $(entry).addClass("hover:bg-sky-400");
-    $(entry).addClass("active:bg-sky-600");
-    $(entry).on("click", function() {
-      $("#event").html(`${month} ${calendar[index].dates[i].day} - ${calendar[index].dates[i].desc}`);
-    });
-  }
-  configureCursor();
-}
-
-function timePerSecond() {
-  deez = new Date();
-  let hour = deez.getHours();
-  let minute = deez.getMinutes();
-  let period = hour >= 12 ? "PM" : "AM";
-
-  hour = hour % 12;
-  hour = hour ? hour : 12;
-  minute = convertToProperMinutesOrSeconds(minute);
-
-  const actualTime = `${hour}:${minute} ${period}`;
-  if (actualTime === "12:00 AM") {
-    time();
-  }
-  $("#time").html(actualTime);
-}
-
-// used for both mp3 player and current time
-function convertToProperMinutesOrSeconds(minutes) {
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  return minutes;
+  });
 }
 
 // window management.sys
