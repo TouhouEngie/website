@@ -348,6 +348,7 @@ async function musicplayerStart() {
   var repeat = false;
   var useMainPlaylist = false;
   var shuffleOrder = [];
+  var currentPlaylistOrder = [];
   var increment = 0;
   var index = 0;
   var a = 0;
@@ -386,6 +387,9 @@ async function musicplayerStart() {
     invokeNextSong();
   });
   $("#rewind").on('click', function() {
+    if (increment <= 0 && (shuffle || !useMainPlaylist)) {
+      increment = 0;
+    }
     if (shuffle) {
       increment--;
       playNextSong(playlist[shuffleOrder[increment]]);
@@ -393,8 +397,9 @@ async function musicplayerStart() {
       playNextSong(playlist[index]);
     } else if (useMainPlaylist) { 
       playNextSong(playlist[index-1]);
-    } else { 
-      playNextSong(playlist[basePlaylist[a].songs[index-1]]);
+    } else {
+      increment--;
+      playNextSong(currentPlaylistOrder[increment]);
     }
   });
 
@@ -409,26 +414,30 @@ async function musicplayerStart() {
     original = variName ? "stroke-white" : "stroke-cyan-500";
      $("#" + vari + "stroke").addClass(newClass).removeClass(original);
   }
+
   function loadListOfLists() {
     $("#playlist").empty();
-    var loadEverything = $("<li>");
-    loadEverything.addClass("pointer");
-    loadEverything.html(`<p>All Songs...</p><br>`);
-    loadEverything.on('click', (function() {
+    var playlistEntry = $("<li>");
+    playlistEntry.addClass("pointer");
+    playlistEntry.html(`<p>All Songs...</p><br>`);
+    playlistEntry.on('click', (function() {
         setListOfSongs(playlist, []);
     }));
-    $("#playlist").append(loadEverything);
+    $("#playlist").append(playlistEntry);
     for (let i = 0; i < basePlaylist.length; i++){
-      loadEverything = $("<li>");
-      loadEverything.addClass("pointer");
-      loadEverything.html(`<p>${basePlaylist[i].name}</p><br>`);
-      loadEverything.on('click', (function() {
+      playlistEntry = $("<li>");
+      playlistEntry.addClass("pointer");
+      playlistEntry.html(`<p>${basePlaylist[i].name}</p><br>`);
+      playlistEntry.on('click', (function() {
         useMainPlaylist = false;
-        setListOfSongs(playlist, basePlaylist[i].songs);
+        currentPlaylistOrder = basePlaylist[i].songs;
+        setListOfSongs(playlist, currentPlaylistOrder);
+        shuffler();
       }));
-      $("#playlist").append(loadEverything);
+      $("#playlist").append(playlistEntry);
     }
   }
+
   function setListOfSongs(playlist, secondList) {
     $("#playlist").empty();
     if (secondList.length === 0) {
@@ -436,37 +445,30 @@ async function musicplayerStart() {
       useMainPlaylist = true;
     }
     for (let i = 0; i < secondList.length; i++) {
-      if (useMainPlaylist) {
-        var song = playlist[i];
-      } else {
-        var song = playlist[secondList[i]-1];
-      }
+      var song = useMainPlaylist ? playlist[i] : playlist[secondList[i]];
       var newSong = $('<li>');
       newSong.add("pointer");
       newSong.html(`<p>${song.title}</p><p class="text-xs">${song.author}</p><br>`);
-      newSong.on('click', (function(currentSong, hehe) {
+      newSong.on('click', (function(currentSong) {
         return function() {
           // is only called once but it's one hell of a logic segment
-          a = hehe;
-          console.log(a);
           playSong(currentSong);
         };
-      })(song, i));
+      })(song));
       $("#playlist").append(newSong);
     }
   }
+
   function shuffler() {
     var temp = 0;
-    if (useMainPlaylist) {
-      var len = playlist.length
-    } else {
-      var len = basePlaylist[a].songs.length
-    }
-    while (shuffleOrder.length <= (len - 1)) {
+    // too many people these days use 'len' as shorthand for 'length.' nah, we're going with 'rin'
+    var rin = useMainPlaylist ? playlist.length : currentPlaylistOrder.length;
+    
+    while (shuffleOrder.length <= (rin - 1)) {
       if (useMainPlaylist) {
-        temp = Math.abs(Math.round((Math.random() * len) - 1));
+        temp = Math.abs(Math.round((Math.random() * rin) - 1));
       } else {
-        temp = basePlaylist[a].songs[Math.abs(Math.round((Math.random() * len) - 1))];
+        temp = currentPlaylistOrder[Math.abs(Math.round((Math.random() * rin) - 1))];
       }
       if (shuffleOrder.indexOf(temp) < 0) {
         shuffleOrder.push(temp);
@@ -479,7 +481,12 @@ async function musicplayerStart() {
 
     // basically the equivalent of taking an integral of a derivative.
     // takes the index of a song in the array
-    index = playlist.findIndex(s => s.title === song.title && s.author === song.author);
+    if (useMainPlaylist) {
+      index = playlist.findIndex(s => s.title === song.title && s.author === song.author);
+    } else {
+      var tempindex = playlist.findIndex(s => s.title === song.title && s.author === song.author);
+      index = currentPlaylistOrder.findIndex(s => tempindex === s);
+    }
     var currentProgressInSeconds = 0;
     var totalProgressInSeconds = 0;
     if (audio) {
@@ -526,7 +533,8 @@ async function musicplayerStart() {
     } else if (useMainPlaylist) { 
       playNextSong(playlist[index+1]);
     } else {
-      playNextSong(playlist[basePlaylist[a].songs[index+1]]);
+      increment++;
+      playNextSong(playlist[currentPlaylistOrder[increment]]);
     }
   }
   function playNextSong(song) {
