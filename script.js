@@ -373,22 +373,7 @@ async function musicplayerStart() {
 
   // Set the buttons and shuffle functionality
   $("#shuffle").on('click', function() {
-    var temp = 0;
-    if (useMainPlaylist) {
-      var len = playlist.length
-    } else {
-      var len = basePlaylist[a].songs.length
-    }
-    while (shuffleOrder.length <= (len - 1)) {
-      if (useMainPlaylist) {
-        temp = Math.abs(Math.round((Math.random() * len) - 1));
-      } else {
-        temp = basePlaylist[a].songs[Math.abs(Math.round((Math.random() * len) - 1))];
-      }
-      if (shuffleOrder.indexOf(temp) < 0) {
-        shuffleOrder.push(temp);
-      }
-    }
+    shuffler();
     setSvgAndStuff('shuffle');
     if (!(audio)) {
       playSong(playlist[shuffleOrder[increment]]);
@@ -468,6 +453,24 @@ async function musicplayerStart() {
         };
       })(song, i));
       $("#playlist").append(newSong);
+    }
+  }
+  function shuffler() {
+    var temp = 0;
+    if (useMainPlaylist) {
+      var len = playlist.length
+    } else {
+      var len = basePlaylist[a].songs.length
+    }
+    while (shuffleOrder.length <= (len - 1)) {
+      if (useMainPlaylist) {
+        temp = Math.abs(Math.round((Math.random() * len) - 1));
+      } else {
+        temp = basePlaylist[a].songs[Math.abs(Math.round((Math.random() * len) - 1))];
+      }
+      if (shuffleOrder.indexOf(temp) < 0) {
+        shuffleOrder.push(temp);
+      }
     }
   }
 
