@@ -317,6 +317,9 @@ function pythonStart() {
   return;
 } 
 
+/*
+CORS + copyparty = disaster.
+
 function emailStart() {
   $('#aForm').on('submit', async function(e) {
     e.preventDefault();
@@ -336,6 +339,7 @@ function emailStart() {
     }
   });
 }
+*/
 
 async function musicplayerStart() {
   const playlist = await getJsonData(json, "music.json");
