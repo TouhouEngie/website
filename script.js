@@ -346,6 +346,7 @@ async function musicplayerStart() {
   const basePlaylist = await getJsonData(json, "playlist.json");
   var shuffle = false;
   var repeat = false;
+  var useMainPlaylist = false;
   var shuffleOrder = [];
   var increment = 0;
   var index = 0;
@@ -373,8 +374,17 @@ async function musicplayerStart() {
   // Set the buttons and shuffle functionality
   $("#shuffle").on('click', function() {
     var temp = 0;
-    while (shuffleOrder.length <= (playlist[i].songs.length - 1)) {
-      temp = Math.abs(Math.round((Math.random() * playlist.length) - 1));
+    if (useMainPlaylist) {
+      var len = playlist.length
+    } else {
+      var len = basePlaylist[a].songs.length
+    }
+    while (shuffleOrder.length <= (len - 1)) {
+      if (useMainPlaylist) {
+        temp = Math.abs(Math.round((Math.random() * len) - 1));
+      } else {
+        temp = basePlaylist[a].songs[Math.abs(Math.round((Math.random() * len) - 1))];
+      }
       if (shuffleOrder.indexOf(temp) < 0) {
         shuffleOrder.push(temp);
       }
@@ -388,14 +398,7 @@ async function musicplayerStart() {
     setSvgAndStuff('repeat');
   });
   $("#nextsong").on('click', function() {
-    if (shuffle) {
-      increment++;
-      playNextSong(playlist[shuffleOrder[increment]]);
-    } else if (repeat) {
-      playNextSong(playlist[index]);
-    } else { 
-      playNextSong(playlist[index+1]);
-    }
+    invokeNextSong();
   });
   $("#rewind").on('click', function() {
     if (shuffle) {
@@ -403,8 +406,10 @@ async function musicplayerStart() {
       playNextSong(playlist[shuffleOrder[increment]]);
     } else if (repeat) {
       playNextSong(playlist[index]);
-    } else { 
+    } else if (useMainPlaylist) { 
       playNextSong(playlist[index-1]);
+    } else { 
+      playNextSong(playlist[basePlaylist[a].songs[index-1]]);
     }
   });
 
@@ -422,17 +427,18 @@ async function musicplayerStart() {
   function loadListOfLists() {
     $("#playlist").empty();
     var loadEverything = $("<li>");
-    loadEverything.add("pointer");
+    loadEverything.addClass("pointer");
     loadEverything.html(`<p>All Songs...</p><br>`);
     loadEverything.on('click', (function() {
         setListOfSongs(playlist, []);
     }));
     $("#playlist").append(loadEverything);
     for (let i = 0; i < basePlaylist.length; i++){
-      var loadEverything = $("<li>");
-      loadEverything.add("pointer");
+      loadEverything = $("<li>");
+      loadEverything.addClass("pointer");
       loadEverything.html(`<p>${basePlaylist[i].name}</p><br>`);
       loadEverything.on('click', (function() {
+        useMainPlaylist = false;
         setListOfSongs(playlist, basePlaylist[i].songs);
       }));
       $("#playlist").append(loadEverything);
@@ -440,7 +446,6 @@ async function musicplayerStart() {
   }
   function setListOfSongs(playlist, secondList) {
     $("#playlist").empty();
-    var useMainPlaylist = false;
     if (secondList.length === 0) {
       secondList = playlist;
       useMainPlaylist = true;
@@ -454,12 +459,14 @@ async function musicplayerStart() {
       var newSong = $('<li>');
       newSong.add("pointer");
       newSong.html(`<p>${song.title}</p><p class="text-xs">${song.author}</p><br>`);
-      newSong.on('click', (function(currentSong) {
+      newSong.on('click', (function(currentSong, hehe) {
         return function() {
           // is only called once but it's one hell of a logic segment
+          a = hehe;
+          console.log(a);
           playSong(currentSong);
         };
-      })(song));
+      })(song, i));
       $("#playlist").append(newSong);
     }
   }
@@ -498,14 +505,7 @@ async function musicplayerStart() {
     audio.play();
     // play_and_draw();
     audio.addEventListener('ended', function() {
-      if (shuffle) {
-        increment++;
-        playNextSong(playlist[shuffleOrder[increment]]);
-      } else if (repeat) {
-        playNextSong(playlist[index]);
-      } else { 
-        playNextSong(playlist[index+1]);
-      }
+      invokeNextSong();
     });
     audio.addEventListener('pause', function() {
       $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`);
@@ -513,6 +513,18 @@ async function musicplayerStart() {
     audio.addEventListener('play', function() {
       $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`);
     });
+  }
+  function invokeNextSong() {
+    if (shuffle) {
+      increment++;
+      playNextSong(playlist[shuffleOrder[increment]]);
+    } else if (repeat) {
+      playNextSong(playlist[index]);
+    } else if (useMainPlaylist) { 
+      playNextSong(playlist[index+1]);
+    } else {
+      playNextSong(playlist[basePlaylist[a].songs[index+1]]);
+    }
   }
   function playNextSong(song) {
     if (song) {
