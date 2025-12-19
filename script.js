@@ -343,28 +343,21 @@ function emailStart() {
 
 async function musicplayerStart() {
   const playlist = await getJsonData(json, "music.json");
+  const basePlaylist = await getJsonData(json, "playlist.json");
   var shuffle = false;
   var repeat = false;
   var shuffleOrder = [];
   var increment = 0;
   var index = 0;
+  var a = 0;
   var newClass = "";
   var original = "";
   // var context = new AudioContext();
   // var analyser = context.createAnalyser();
-  for (let i = 0; i < playlist.length; i++) {
-    var song = playlist[i];
-    var newSong = $('<li>');
-    newSong.add("pointer");
-    newSong.html(`<p>${song.title}</p><p class="text-xs">${song.author}</p><br>`);
-    newSong.on('click', (function(currentSong) {
-      return function() {
-        // is only called once but it's one hell of a logic segment
-        playSong(currentSong);
-      };
-    })(song));
-    $("#playlist").append(newSong);
-  }
+  loadListOfLists();
+  $("#returntostart").on("click", function() {
+    loadListOfLists();
+  });
   $("#pause").on('click', function() {
     if (!audio.paused) {
       // context.suspend();
@@ -380,7 +373,7 @@ async function musicplayerStart() {
   // Set the buttons and shuffle functionality
   $("#shuffle").on('click', function() {
     var temp = 0;
-    while (shuffleOrder.length <= (playlist.length - 1)) {
+    while (shuffleOrder.length <= (playlist[i].songs.length - 1)) {
       temp = Math.abs(Math.round((Math.random() * playlist.length) - 1));
       if (shuffleOrder.indexOf(temp) < 0) {
         shuffleOrder.push(temp);
@@ -425,6 +418,50 @@ async function musicplayerStart() {
     newClass = variName ? "stroke-cyan-500" : "stroke-white";
     original = variName ? "stroke-white" : "stroke-cyan-500";
      $("#" + vari + "stroke").addClass(newClass).removeClass(original);
+  }
+  function loadListOfLists() {
+    $("#playlist").empty();
+    var loadEverything = $("<li>");
+    loadEverything.add("pointer");
+    loadEverything.html(`<p>All Songs...</p><br>`);
+    loadEverything.on('click', (function() {
+        setListOfSongs(playlist, []);
+    }));
+    $("#playlist").append(loadEverything);
+    for (let i = 0; i < basePlaylist.length; i++){
+      var loadEverything = $("<li>");
+      loadEverything.add("pointer");
+      loadEverything.html(`<p>${basePlaylist[i].name}</p><br>`);
+      loadEverything.on('click', (function() {
+        setListOfSongs(playlist, basePlaylist[i].songs);
+      }));
+      $("#playlist").append(loadEverything);
+    }
+  }
+  function setListOfSongs(playlist, secondList) {
+    $("#playlist").empty();
+    var useMainPlaylist = false;
+    if (secondList.length === 0) {
+      secondList = playlist;
+      useMainPlaylist = true;
+    }
+    for (let i = 0; i < secondList.length; i++) {
+      if (useMainPlaylist) {
+        var song = playlist[i];
+      } else {
+        var song = playlist[secondList[i]-1];
+      }
+      var newSong = $('<li>');
+      newSong.add("pointer");
+      newSong.html(`<p>${song.title}</p><p class="text-xs">${song.author}</p><br>`);
+      newSong.on('click', (function(currentSong) {
+        return function() {
+          // is only called once but it's one hell of a logic segment
+          playSong(currentSong);
+        };
+      })(song));
+      $("#playlist").append(newSong);
+    }
   }
 
   function playSong(song) {
