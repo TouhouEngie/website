@@ -354,19 +354,10 @@ async function musicplayerStart() {
   var original = "";
   // var context = new AudioContext();
   // var analyser = context.createAnalyser();
-  for (let i = 0; i < playlist.length; i++) {
-    var song = playlist[i];
-    var newSong = $('<li>');
-    newSong.add("pointer");
-    newSong.html(`<p>${song.title}</p><p class="text-xs">${song.author}</p><br>`);
-    newSong.on('click', (function(currentSong) {
-      return function() {
-        // is only called once but it's one hell of a logic segment
-        playSong(currentSong);
-      };
-    })(song));
-    $("#playlist").append(newSong);
-  }
+  loadListOfLists();
+  $("#returntostart").on("click", function() {
+    loadListOfLists();
+  });
   $("#pause").on('click', function() {
     if (!audio.paused) {
       // context.suspend();
@@ -381,7 +372,7 @@ async function musicplayerStart() {
 
   // Set the buttons and shuffle functionality
   $("#shuffle").on('click', function() {
-    if (openedAPlaylist === false) {
+    if (!(openedAPlaylist)) {
       return;
     }
     shuffler();
@@ -394,13 +385,13 @@ async function musicplayerStart() {
     setSvgAndStuff('repeat');
   });
   $("#nextsong").on('click', function() {
-    if (openedAPlaylist === false) {
+    if (!(openedAPlaylist)) {
       return;
     }
     invokeNextSong();
   });
   $("#rewind").on('click', function() {
-    if (openedAPlaylist === false) {
+    if (!(openedAPlaylist)) {
       return;
     }
     if (shuffle) {
