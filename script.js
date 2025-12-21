@@ -342,7 +342,7 @@ function emailStart() {
 */
 
 async function musicplayerStart() {
-  const playlist = await getJsonData(json, "music2.json");
+  const playlist = await getJsonData(json, "music.json");
   var shuffle = false;
   var repeat = false;
   var openedAPlaylist = false;
@@ -350,7 +350,6 @@ async function musicplayerStart() {
   var currentPlaylistOrder = [];
   var increment = 0;
   var index = 0;
-  var a = 0;
   var newClass = "";
   var original = "";
   // var context = new AudioContext();
