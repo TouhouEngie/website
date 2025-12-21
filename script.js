@@ -345,7 +345,7 @@ async function musicplayerStart() {
   const playlist = await getJsonData(json, "music2.json");
   var shuffle = false;
   var repeat = false;
-  var useMainPlaylist = false;
+  var openedAPlaylist = false;
   var shuffleOrder = [];
   var currentPlaylistOrder = [];
   var increment = 0;
@@ -373,19 +373,28 @@ async function musicplayerStart() {
 
   // Set the buttons and shuffle functionality
   $("#shuffle").on('click', function() {
+    if (!(openedAPlaylist)) {
+      return;
+    }
     shuffler();
     setSvgAndStuff('shuffle');
     if (!(audio)) {
-      playSong(playlist[shuffleOrder[increment]]);
+      playSong(currentPlaylistOrder[shuffleOrder[increment]]);
     }
   });
   $("#repeat").on('click', function() {
     setSvgAndStuff('repeat');
   });
   $("#nextsong").on('click', function() {
+    if (!(openedAPlaylist)) {
+      return;
+    }
     invokeNextSong();
   });
   $("#rewind").on('click', function() {
+    if (!(openedAPlaylist)) {
+      return;
+    }
     if (shuffle) {
       increment--;
       playNextSong(currentPlaylistOrder[shuffleOrder[increment]]);
@@ -425,7 +434,6 @@ async function musicplayerStart() {
       playlistEntry.addClass("pointer");
       playlistEntry.html(`<p>${playlist[i].title}</p><br>`);
       playlistEntry.on('click', (function() {
-        useMainPlaylist = false;
         currentPlaylistOrder = (playlist[i].contents);
         setListOfSongs();
         shuffler();
@@ -435,6 +443,7 @@ async function musicplayerStart() {
   }
 
   function setListOfSongs() {
+    openedAPlaylist = true;
     $("#playlist").empty();
     for (let i = 0; i < currentPlaylistOrder.length; i++) {
       var song = currentPlaylistOrder[i];
@@ -470,7 +479,6 @@ async function musicplayerStart() {
         }
       }
     }
-    useMainPlaylist = true;
   }
 
   function playSong(song) {
