@@ -345,7 +345,9 @@ async function musicplayerStart() {
   const playlist = await getJsonData(json, "music.json");
   var shuffle = false;
   var repeat = false;
+  var openedAPlaylist = false;
   var shuffleOrder = [];
+  var currentPlaylistOrder = [];
   var increment = 0;
   var index = 0;
   var newClass = "";
@@ -379,39 +381,36 @@ async function musicplayerStart() {
 
   // Set the buttons and shuffle functionality
   $("#shuffle").on('click', function() {
-    var temp = 0;
-    while (shuffleOrder.length <= (playlist.length - 1)) {
-      temp = Math.abs(Math.round((Math.random() * playlist.length) - 1));
-      if (shuffleOrder.indexOf(temp) < 0) {
-        shuffleOrder.push(temp);
-      }
+    if (openedAPlaylist === false) {
+      return;
     }
+    shuffler();
     setSvgAndStuff('shuffle');
     if (!(audio)) {
-      playSong(playlist[shuffleOrder[increment]]);
+      playSong(currentPlaylistOrder[shuffleOrder[increment]]);
     }
   });
   $("#repeat").on('click', function() {
     setSvgAndStuff('repeat');
   });
   $("#nextsong").on('click', function() {
-    if (shuffle) {
-      increment++;
-      playNextSong(playlist[shuffleOrder[increment]]);
-    } else if (repeat) {
-      playNextSong(playlist[index]);
-    } else { 
-      playNextSong(playlist[index+1]);
+    if (openedAPlaylist === false) {
+      return;
     }
+    invokeNextSong();
   });
   $("#rewind").on('click', function() {
+    if (openedAPlaylist === false) {
+      return;
+    }
     if (shuffle) {
       increment--;
-      playNextSong(playlist[shuffleOrder[increment]]);
+      playNextSong(currentPlaylistOrder[shuffleOrder[increment]]);
     } else if (repeat) {
-      playNextSong(playlist[index]);
+      // todo: set this to refer to the current playing object instead of the array to avoid dereferencing bugs
+      playNextSong(currentPlaylistOrder[index]);
     } else { 
-      playNextSong(playlist[index-1]);
+      playNextSong(currentPlaylistOrder[index-1]);
     }
   });
 
@@ -427,12 +426,75 @@ async function musicplayerStart() {
      $("#" + vari + "stroke").addClass(newClass).removeClass(original);
   }
 
+  function loadListOfLists() {
+    $("#playlist").empty();
+    constructor(`<p>All Songs...</p><br>`, -1);
+    for (let i = 0; i < playlist.length; i++){
+      constructor(`<p>${playlist[i].title}</p><br>`, i);
+    }
+    function constructor(htmlText, e) {
+      var playlistEntry = $("<li>");
+      playlistEntry.addClass("pointer");
+      playlistEntry.html(htmlText);
+      playlistEntry.on('click', (function() {
+        $("#playlist").empty();
+        if (e < 0) {
+          getAllSongs();
+        } else {
+          currentPlaylistOrder = (playlist[e].contents);
+        }
+        setListOfSongs();
+        shuffler();
+      }));
+      $("#playlist").append(playlistEntry);
+    }
+  }
+
+  function setListOfSongs() {
+    openedAPlaylist = true;
+    $("#playlist").empty();
+    for (let i = 0; i < currentPlaylistOrder.length; i++) {
+      var song = currentPlaylistOrder[i];
+      var newSong = $('<li>');
+      newSong.add("pointer");
+      newSong.html(`<p>${song.title}</p><p class="text-xs">${song.author}</p><br>`);
+      newSong.on('click', (function(currentSong) {
+        return function() {
+          // is only called once but it's one hell of a logic segment
+          playSong(currentSong);
+        };
+      })(song));
+      $("#playlist").append(newSong);
+    }
+  }
+
+  function shuffler() {
+    var temp = 0;
+    while (shuffleOrder.length <= (currentPlaylistOrder.length - 1)) {
+      temp = Math.abs(Math.round((Math.random() * currentPlaylistOrder.length) - 1));
+      if (shuffleOrder.indexOf(temp) < 0) {
+        shuffleOrder.push(temp);
+      }
+    }
+  }
+
+  function getAllSongs() {
+    currentPlaylistOrder = [];
+    for (var i = 0; i < playlist.length; i++) {
+      for (var k = 0; k < playlist[i].contents.length; k++) {
+        if (playlist[i].contents[k].inMainline) {
+          currentPlaylistOrder.push(playlist[i].contents[k]);
+        }
+      }
+    }
+  }
+
   function playSong(song) {
     // Handles anything related to the Audio class.
 
     // basically the equivalent of taking an integral of a derivative.
     // takes the index of a song in the array
-    index = playlist.findIndex(s => s.title === song.title && s.author === song.author);
+    index = currentPlaylistOrder.findIndex(s => s.title === song.title && s.author === song.author);
     var currentProgressInSeconds = 0;
     var totalProgressInSeconds = 0;
     if (audio) {
@@ -461,14 +523,7 @@ async function musicplayerStart() {
     audio.play();
     // play_and_draw();
     audio.addEventListener('ended', function() {
-      if (shuffle) {
-        increment++;
-        playNextSong(playlist[shuffleOrder[increment]]);
-      } else if (repeat) {
-        playNextSong(playlist[index]);
-      } else { 
-        playNextSong(playlist[index+1]);
-      }
+      invokeNextSong(song);
     });
     audio.addEventListener('pause', function() {
       $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`);
@@ -476,6 +531,17 @@ async function musicplayerStart() {
     audio.addEventListener('play', function() {
       $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`);
     });
+  }
+  function invokeNextSong(song) {
+    if (shuffle) {
+      increment++;
+      playNextSong(currentPlaylistOrder[shuffleOrder[increment]]);
+    } else if (repeat) {
+      // todo: set this to refer to the current playing object instead of the array to avoid dereferencing bugs
+      playNextSong(song);
+    } else { 
+      playNextSong(currentPlaylistOrder[index+1]);
+    }
   }
   function playNextSong(song) {
     if (song) {
