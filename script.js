@@ -420,21 +420,21 @@ async function musicplayerStart() {
 
   function loadListOfLists() {
     $("#playlist").empty();
-    var playlistEntry = $("<li>");
-    playlistEntry.addClass("pointer");
-    playlistEntry.html(`<p>All Songs...</p><br>`);
-    playlistEntry.on('click', (function() {
-      $("#playlist").empty();
-      getAllSongs();
-      setListOfSongs();
-    }));
-    $("#playlist").append(playlistEntry);
+    constructor(`<p>All Songs...</p><br>`, -1);
     for (let i = 0; i < playlist.length; i++){
-      playlistEntry = $("<li>");
+      constructor(`<p>${playlist[i].title}</p><br>`, i);
+    }
+    function constructor(htmlText, e) {
+      var playlistEntry = $("<li>");
       playlistEntry.addClass("pointer");
-      playlistEntry.html(`<p>${playlist[i].title}</p><br>`);
+      playlistEntry.html(htmlText);
       playlistEntry.on('click', (function() {
-        currentPlaylistOrder = (playlist[i].contents);
+        $("#playlist").empty();
+        if (e < 0) {
+          getAllSongs();
+        } else {
+          currentPlaylistOrder = (playlist[e].contents);
+        }
         setListOfSongs();
         shuffler();
       }));
