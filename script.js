@@ -426,7 +426,7 @@ async function musicplayerStart() {
       playlistEntry.html(`<p>${playlist[i].title}</p><br>`);
       playlistEntry.on('click', (function() {
         useMainPlaylist = false;
-        currentPlaylistOrder = playlist[i];
+        currentPlaylistOrder = (playlist[i].contents);
         setListOfSongs();
         shuffler();
       }));
@@ -464,9 +464,9 @@ async function musicplayerStart() {
   function getAllSongs() {
     currentPlaylistOrder = [];
     for (var i = 0; i < playlist.length; i++) {
-      for (var k = 0; k < playlist[i].length; k++) {
-        if (playlist[i][k].inMainline) {
-          currentPlaylistOrder.push(playlist[i][k]);
+      for (var k = 0; k < playlist[i].contents.length; k++) {
+        if (playlist[i].contents[k].inMainline) {
+          currentPlaylistOrder.push(playlist[i].contents[k]);
         }
       }
     }
