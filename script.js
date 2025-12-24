@@ -584,10 +584,67 @@ async function musicplayerStart() {
   // TODO: Set visualizer as an optional (experimental) setting, and squash the syncronization bugs related with the web audio API
 }
 
+function pomodoroStart() {
+  // timerSetFor is the master time, timeRemaining is the more dynamic one
+  var timerSetFor = 1500;
+  var timeRemaining = 1500;
+  var timerInterval = undefined;
+  var breaker = 0;
+  var isBreak = false;
+  var timerRunning = false;
+  $("#toggletimer").on("click", (function() {
+    toggleTimer(timerSetFor);
+  }));
+
+  function toggleTimer(masterTime) {
+    timerSet = masterTime + 2;
+    if (timerRunning) {
+      timerSet = timeRemaining;
+      timerRunning = false;
+      $("#msg").html("Timer paused");
+      clearInterval(timerInterval);
+    } else {
+      timerRunning = true;
+      $("#msg").html("Timer started");
+      timerInterval = setInterval(increment, 1000);
+      setTimeout(() => {
+        clearInterval(timerInterval);
+        incrementTimer();
+      }, (timerSet * 1000));
+    }
+  }
+
+  function increment() {
+    document.getElementById("timer").value = (timeRemaining / timerSetFor);
+    configureTimerText();
+    timeRemaining--;
+  }
+  
+  function incrementTimer() {
+    timerRunning = false;
+    isBreak = !(isBreak);
+    breaker++;
+    timerSetFor = isBreak ? 300 : 1500;
+    if (breaker % 7 === 0) {
+      breaker = -1;
+      timerSetFor = 1200;
+    }
+    $("#phase").html(`${Math.floor(breaker / 2) + 1}/4`);
+    timeRemaining = timerSetFor;
+    toggleTimer(timerSetFor);
+  }
+
+  function configureTimerText() {
+    var minutes = Math.floor(timeRemaining / 60);
+    var seconds = timeRemaining % 60;
+    $("#timeremains").html(`${minutes}:${convertToProperMinutesOrSeconds(seconds)}`);
+  }
+}
+
 
 // window management all the way down
 async function setWindows() {
-  appList = await getJsonData(json, "applist.json");
+  appList = await getJsonData(json, "applist2.json");
   // set all them variables for them windows
   // image viewer is called within gallery, so skip that
   $(function() {
