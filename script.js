@@ -1,3 +1,10 @@
+/*
+    Touhou Engie Operating Environment
+    Copyright (C) 2025 Touhou Engie
+    Licensed under the GPL
+*/
+
+
 // some things just need to be global
 const json = "https://fileserver.touhouengie.com/drive/webpage_data";
 var largestIndex = 1;
