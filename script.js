@@ -77,7 +77,7 @@ function setOutsideCheckbox() {
   // all checkboxes (as of right now) live here. will find a more efficient way soon.
   
   $("#visual").on('click', function() {
-    setCookie("visualizer", document.getElementById("visual").checked, 365);
+    setCookie("test", document.getElementById("visual").checked, 365);
   });
 }
 setOutsideCheckbox();
@@ -85,7 +85,7 @@ setOutsideCheckbox();
 function configureSettings() {
   // check cookie
   let cursor = getCookie("cursor");
-  let visualize = getCookie('visualizer');
+  let visualize = getCookie('test');
 
   if (cursor != "") {
     configureCursor(cursor);
@@ -96,7 +96,7 @@ function configureSettings() {
   if (visualize != "") {
     setVisualizer(visualize);
   } else {
-    setCookie('visualizer', false, 365);
+    setCookie('test', false, 365);
   }
   function setVisualizer(flag) {
     console.log(flag);
@@ -511,6 +511,11 @@ async function musicplayerStart() {
         audio.currentTime = (seekbar.value / 100) * audio.duration;
       }
     });
+    let visualizer = new Wave(audio, document.getElementById("canvas"));
+    visualizer.addAnimation(new visualizer.animations.Lines({
+      lineWidth: 3,
+      lineColor: "#fff"
+    }));
     audio.play();
     // play_and_draw();
     audio.addEventListener('ended', function() {
@@ -543,43 +548,6 @@ async function musicplayerStart() {
       $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`);
       audio.pause();
     }
-  }
-  function play_and_draw() {
-    // doing more than one source causes audio glitches beyond my understanding
-    // otherwise this is one and done
-    if (!src) {
-      var src = context.createMediaElementSource(audio);
-      src.connect(analyser);
-      analyser.connect(context.destination);
-    }
-    var ctx = $("#canvas")[0].getContext("2d");
-    analyser.fftSize = 256;
-    var bufferLength = analyser.frequencyBinCount;
-    console.log(bufferLength);
-    var dataArray = new Uint8Array(bufferLength);
-    var WIDTH = $("#canvas").width;
-    var HEIGHT = $("#canvas").height;
-    var barWidth = (WIDTH / bufferLength) * 2.5;
-    var barHeight;
-    var x = 0;
-    function renderFrame() {
-      requestAnimationFrame(renderFrame);
-      x = 0;
-      analyser.getByteFrequencyData(dataArray);
-      ctx.fillStyle = "#030712";
-      ctx.fillRect(0, 0, WIDTH, HEIGHT);
-      for (var i = 0; i < bufferLength; i++) {
-        barHeight = dataArray[i] / 1.5 - 50;
-        var r = barHeight + (25 * (i/bufferLength));
-        var g = 250 * (i/bufferLength);
-        var b = 50;
-        ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
-        ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
-        x += barWidth + 1;
-      }
-    }
-    audio.play();
-    renderFrame();
   }
   // TODO: Set visualizer as an optional (experimental) setting, and squash the syncronization bugs related with the web audio API
 }
@@ -652,7 +620,7 @@ async function setWindows() {
       let app = appList[i].title;
       $(`#` + app + `close`).on("click", (function() { closeWindow("#" + app) })); // could just do $("#app")
       if (i > 1) {
-        if (i < 7) {
+        if (i < 8) {
           $(`#` + app + `open`).on("click", (function() { openWindow("#" + app) }));
         } else {
           $(`#` + app + `open`).on("click", (function() { iconTap(app) }));
