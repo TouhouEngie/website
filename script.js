@@ -619,7 +619,7 @@ function pomodoroStart() {
 
 // window management all the way down
 async function setWindows() {
-  appList = await getJsonData(json, "applist.json");
+  appList = await getJsonData(json, "applist2.json");
   // set all them variables for them windows
   // image viewer is called within gallery, so skip that
   $(function() {
