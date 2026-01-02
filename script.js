@@ -216,7 +216,7 @@ function timePerSecond() {
 
   hour = hour % 12;
   hour = hour ? hour : 12;
-  minute = convertToProperMinutesOrSeconds(minute);
+  minute = minute.toString().padStart(2, "0");
 
   const actualTime = `${hour}:${minute} ${period}`;
   if (actualTime === "12:00 AM") {
@@ -224,13 +224,6 @@ function timePerSecond() {
   }
   $("#time").html(actualTime);
 }
-
-// used for both mp3 player and current time
-function convertToProperMinutesOrSeconds(minutes) {
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  return minutes;
-}
-
 
 // all apps
 async function noteviewStart() {
@@ -352,19 +345,15 @@ async function musicplayerStart() {
   var index = 0;
   var newClass = "";
   var original = "";
-  // var context = new AudioContext();
-  // var analyser = context.createAnalyser();
   loadListOfLists();
   $("#returntostart").on("click", function() {
     loadListOfLists();
   });
   $("#pause").on('click', function() {
     if (!audio.paused) {
-      // context.suspend();
       audio.pause();
       $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`);
     } else {
-      // context.resume();
       audio.play();
       $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`);
     }
@@ -500,8 +489,8 @@ async function musicplayerStart() {
     $('#pausebutton').html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`);
     audio.addEventListener('timeupdate', function() {
       $("#seekbar").val((this.currentTime / this.duration) * 100);
-      currentProgressInSeconds = convertToProperMinutesOrSeconds(Math.round(this.currentTime) % 60);
-      totalProgressInSeconds = convertToProperMinutesOrSeconds(Math.round(this.duration) % 60);
+      currentProgressInSeconds = (Math.round(this.currentTime) % 60).toString().padStart(2, "0");
+      totalProgressInSeconds = (Math.round(this.duration) % 60).toString().padStart(2, "0");
       $("#seekprogress").html(`${(Math.floor(Math.round(this.currentTime) / 60))}:${currentProgressInSeconds}`);
       $("#totalprogress").html(`${Math.floor(Math.round(this.duration) / 60)}:${totalProgressInSeconds}`);
     });
@@ -512,16 +501,13 @@ async function musicplayerStart() {
       }
     });
     audio.play();
-    // play_and_draw();
     audio.addEventListener('ended', function() {
       invokeNextSong(song);
     });
     audio.addEventListener('pause', function() {
-      // context.suspend();
       $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`);
     });
     audio.addEventListener('play', function() {
-      // context.resume();
       $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`);
     });
   }
@@ -543,43 +529,6 @@ async function musicplayerStart() {
       $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`);
       audio.pause();
     }
-  }
-  function play_and_draw() {
-    // doing more than one source causes audio glitches beyond my understanding
-    // otherwise this is one and done
-    if (!src) {
-      var src = context.createMediaElementSource(audio);
-      src.connect(analyser);
-      analyser.connect(context.destination);
-    }
-    var ctx = $("#canvas")[0].getContext("2d");
-    analyser.fftSize = 256;
-    var bufferLength = analyser.frequencyBinCount;
-    console.log(bufferLength);
-    var dataArray = new Uint8Array(bufferLength);
-    var WIDTH = $("#canvas").width;
-    var HEIGHT = $("#canvas").height;
-    var barWidth = (WIDTH / bufferLength) * 2.5;
-    var barHeight;
-    var x = 0;
-    function renderFrame() {
-      requestAnimationFrame(renderFrame);
-      x = 0;
-      analyser.getByteFrequencyData(dataArray);
-      ctx.fillStyle = "#030712";
-      ctx.fillRect(0, 0, WIDTH, HEIGHT);
-      for (var i = 0; i < bufferLength; i++) {
-        barHeight = dataArray[i] / 1.5 - 50;
-        var r = barHeight + (25 * (i/bufferLength));
-        var g = 250 * (i/bufferLength);
-        var b = 50;
-        ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
-        ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
-        x += barWidth + 1;
-      }
-    }
-    audio.play();
-    renderFrame();
   }
   // TODO: Set visualizer as an optional (experimental) setting, and squash the syncronization bugs related with the web audio API
 }
@@ -637,7 +586,7 @@ function pomodoroStart() {
   function configureTimerText() {
     var minutes = Math.floor(timeRemaining / 60);
     var seconds = timeRemaining % 60;
-    $("#timeremains").html(`${minutes}:${convertToProperMinutesOrSeconds(seconds)}`);
+    $("#timeremains").html(`${minutes}:${(seconds).toString().padStart(2, "0")}`);
   }
 }
 
