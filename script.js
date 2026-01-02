@@ -84,7 +84,7 @@ function setOutsideCheckbox() {
   // all checkboxes (as of right now) live here. will find a more efficient way soon.
   
   $("#visual").on('click', function() {
-    setCookie("test", document.getElementById("visual").checked, 365);
+    setCookie("visualizer", document.getElementById("visual").checked, 365);
   });
 }
 setOutsideCheckbox();
@@ -92,7 +92,7 @@ setOutsideCheckbox();
 function configureSettings() {
   // check cookie
   let cursor = getCookie("cursor");
-  let visualize = getCookie('test');
+  let visualize = getCookie('visualizer');
 
   if (cursor != "") {
     configureCursor(cursor);
@@ -103,7 +103,7 @@ function configureSettings() {
   if (visualize != "") {
     setVisualizer(visualize);
   } else {
-    setCookie('test', false, 365);
+    setCookie('visualizer', false, 365);
   }
   function setVisualizer(flag) {
     console.log(flag);
@@ -567,6 +567,43 @@ async function musicplayerStart() {
       audio.pause();
     }
   }
+  function play_and_draw() {
+    // doing more than one source causes audio glitches beyond my understanding
+    // otherwise this is one and done
+    if (!src) {
+      var src = context.createMediaElementSource(audio);
+      src.connect(analyser);
+      analyser.connect(context.destination);
+    }
+    var ctx = $("#canvas")[0].getContext("2d");
+    analyser.fftSize = 256;
+    var bufferLength = analyser.frequencyBinCount;
+    console.log(bufferLength);
+    var dataArray = new Uint8Array(bufferLength);
+    var WIDTH = $("#canvas").width;
+    var HEIGHT = $("#canvas").height;
+    var barWidth = (WIDTH / bufferLength) * 2.5;
+    var barHeight;
+    var x = 0;
+    function renderFrame() {
+      requestAnimationFrame(renderFrame);
+      x = 0;
+      analyser.getByteFrequencyData(dataArray);
+      ctx.fillStyle = "#030712";
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+      for (var i = 0; i < bufferLength; i++) {
+        barHeight = dataArray[i] / 1.5 - 50;
+        var r = barHeight + (25 * (i/bufferLength));
+        var g = 250 * (i/bufferLength);
+        var b = 50;
+        ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+        ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+        x += barWidth + 1;
+      }
+    }
+    audio.play();
+    renderFrame();
+  }
   // TODO: Set visualizer as an optional (experimental) setting, and squash the syncronization bugs related with the web audio API
 }
 
@@ -638,7 +675,7 @@ async function setWindows() {
       let app = appList[i].title;
       $(`#` + app + `close`).on("click", (function() { closeWindow("#" + app) })); // could just do $("#app")
       if (i > 1) {
-        if (i < 8) {
+        if (i < 7) {
           $(`#` + app + `open`).on("click", (function() { openWindow("#" + app) }));
         } else {
           $(`#` + app + `open`).on("click", (function() { iconTap(app) }));
