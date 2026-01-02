@@ -527,7 +527,7 @@ async function musicplayerStart() {
         audio.currentTime = (seekbar.value / 100) * audio.duration;
       }
     });
-    if (!(isNotMobileDevice)) {
+    if (isNotMobileDevice) {
       let visualizer = new Wave(audio, document.getElementById("canvas"));
       visualizer.addAnimation(new visualizer.animations.Lines({
         lineWidth: 3,
