@@ -752,6 +752,11 @@
       margin-left: calc(var(--spacing) * 14);
     }
   }
+  .sm\:block {
+    @media (width >= 40rem) {
+      display: block;
+    }
+  }
   .sm\:h-104 {
     @media (width >= 40rem) {
       height: calc(var(--spacing) * 104);
