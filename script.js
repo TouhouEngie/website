@@ -84,7 +84,7 @@ function setOutsideCheckbox() {
   // all checkboxes (as of right now) live here. will find a more efficient way soon.
   
   $("#visual").on('click', function() {
-    setCookie("test", document.getElementById("visual").checked, 365);
+    setCookie("visualizer", document.getElementById("visual").checked, 365);
   });
 }
 setOutsideCheckbox();
@@ -92,7 +92,7 @@ setOutsideCheckbox();
 function configureSettings() {
   // check cookie
   let cursor = getCookie("cursor");
-  let visualize = getCookie('test');
+  let visualize = getCookie('visualizer');
 
   if (cursor != "") {
     configureCursor(cursor);
@@ -103,7 +103,7 @@ function configureSettings() {
   if (visualize != "") {
     setVisualizer(visualize);
   } else {
-    setCookie('test', false, 365);
+    setCookie('visualizer', false, 365);
   }
   function setVisualizer(flag) {
     console.log(flag);
@@ -641,7 +641,7 @@ async function setWindows() {
       let app = appList[i].title;
       $(`#` + app + `close`).on("click", (function() { closeWindow("#" + app) })); // could just do $("#app")
       if (i > 1) {
-        if (i < 8) {
+        if (i < 7) {
           $(`#` + app + `open`).on("click", (function() { openWindow("#" + app) }));
         } else {
           $(`#` + app + `open`).on("click", (function() { iconTap(app) }));
