@@ -22,15 +22,21 @@ $("#dropdownopen").on("click", function(event) {
 });
 $(document).on("click", function() {
   closeWindow("#dropdownmenu");
+  closeWindow("#pageringwidget");
 });
-$("#time").on("click", function(event) {
-  event.stopPropagation();
-  if ($("#datewidget").is(":visible")) {
-    closeWindow("#datewidget");
-  } else {
-    openWindow("#datewidget");
-  }
-});
+setTopBarWidgets('#time', '#datewidget');
+setTopBarWidgets('#webring', '#pageringwidget')
+
+function setTopBarWidgets(widget, content) {
+  $(widget).on("click", function(event) {
+    event.stopPropagation();
+    if ($(content).is(":visible")) {
+      closeWindow(content);
+    } else {
+      openWindow(content);
+    }
+  });
+}
 
 // navbar logic
 var a = 0;
