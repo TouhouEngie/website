@@ -1,4 +1,4 @@
-/*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com */
+/*! tailwindcss v4.1.16 | MIT License | https://tailwindcss.com */
 @layer properties;
 @layer theme, base, components, utilities;
 @layer theme {
@@ -253,6 +253,9 @@
   .z-5 {
     z-index: 5;
   }
+  .z-7 {
+    z-index: 7;
+  }
   .-m-2 {
     margin: calc(var(--spacing) * -2);
   }
@@ -265,8 +268,14 @@
   .m-px {
     margin: 1px;
   }
+  .mx-2 {
+    margin-inline: calc(var(--spacing) * 2);
+  }
   .mx-3 {
     margin-inline: calc(var(--spacing) * 3);
+  }
+  .mx-4 {
+    margin-inline: calc(var(--spacing) * 4);
   }
   .mx-6 {
     margin-inline: calc(var(--spacing) * 6);
@@ -328,6 +337,9 @@
   .table {
     display: table;
   }
+  .h-2 {
+    height: calc(var(--spacing) * 2);
+  }
   .h-3 {
     height: calc(var(--spacing) * 3);
   }
@@ -379,8 +391,8 @@
   .h-screen {
     height: 100vh;
   }
-  .max-h-\[70vh\] {
-    max-height: 70vh;
+  .w-2 {
+    width: calc(var(--spacing) * 2);
   }
   .w-3 {
     width: calc(var(--spacing) * 3);
@@ -592,6 +604,9 @@
   .p-4 {
     padding: calc(var(--spacing) * 4);
   }
+  .px-2 {
+    padding-inline: calc(var(--spacing) * 2);
+  }
   .px-4 {
     padding-inline: calc(var(--spacing) * 4);
   }
@@ -600,6 +615,9 @@
   }
   .pt-0 {
     padding-top: calc(var(--spacing) * 0);
+  }
+  .pt-2 {
+    padding-top: calc(var(--spacing) * 2);
   }
   .pt-3 {
     padding-top: calc(var(--spacing) * 3);
@@ -621,6 +639,9 @@
   }
   .pl-2 {
     padding-left: calc(var(--spacing) * 2);
+  }
+  .pl-3 {
+    padding-left: calc(var(--spacing) * 3);
   }
   .text-center {
     text-align: center;
@@ -782,11 +803,6 @@
       margin-left: calc(var(--spacing) * 14);
     }
   }
-  .sm\:block {
-    @media (width >= 40rem) {
-      display: block;
-    }
-  }
   .sm\:h-104 {
     @media (width >= 40rem) {
       height: calc(var(--spacing) * 104);
@@ -795,11 +811,6 @@
   .sm\:h-120 {
     @media (width >= 40rem) {
       height: calc(var(--spacing) * 120);
-    }
-  }
-  .sm\:h-130 {
-    @media (width >= 40rem) {
-      height: calc(var(--spacing) * 130);
     }
   }
   .sm\:h-140 {
@@ -815,16 +826,6 @@
   .sm\:h-fit {
     @media (width >= 40rem) {
       height: fit-content;
-    }
-  }
-  .sm\:max-h-130 {
-    @media (width >= 40rem) {
-      max-height: calc(var(--spacing) * 130);
-    }
-  }
-  .sm\:max-h-140 {
-    @media (width >= 40rem) {
-      max-height: calc(var(--spacing) * 140);
     }
   }
   .sm\:w-45 {

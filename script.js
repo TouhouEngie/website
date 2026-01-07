@@ -2,6 +2,7 @@
 const json = "https://fileserver.touhouengie.com/drive/webpage_data";
 var largestIndex = 1;
 var audio = null;
+var volume = 100;
 var appList = undefined;
 var deez = new Date();
 
@@ -13,6 +14,7 @@ setInterval(timePerSecond, 1000);
 time();
 setWindows();
 getLatestCommitId();
+setVolume();
 
 
 // the lone dropdown menu (not very lonely anymore)
@@ -25,7 +27,8 @@ $(document).on("click", function() {
   closeWindow("#pageringwidget");
 });
 setTopBarWidgets('#time', '#datewidget');
-setTopBarWidgets('#webring', '#pageringwidget')
+setTopBarWidgets('#webring', '#pageringwidget');
+setTopBarWidgets('#volume', '#volumewidget');
 
 function setTopBarWidgets(widget, content) {
   $(widget).on("click", function(event) {
@@ -489,6 +492,7 @@ async function musicplayerStart() {
     }
     audio = new Audio(json.concat(song.file));
     audio.crossOrigin = "anonymous";
+    audio.volume = volume / 100;
     $("#thumbnail").html(`<img src="${json.concat(song.image)}">`);
     $("#songtitle").html(`<h3>${song.title}</h3>`);
     $("#songauthor").html(`<p>${song.author}</p>`);
@@ -539,8 +543,38 @@ async function musicplayerStart() {
   // TODO: Set visualizer as an optional (experimental) setting, and squash the syncronization bugs related with the web audio API
 }
 
+function setVolume() {
+  var slider = document.getElementById("volumeslider")
+  slider.addEventListener("input", function() {
+    volume = slider.value;
+    $("#volumepercent").html(`${volume}%`);
+    let allOtherAudio = document.getElementsByTagName("audio");
+    for (var i = 0; i < allOtherAudio.length; i++) {
+      allOtherAudio[i].volume = volume / 100;
+    }
+    if (audio) {
+      audio.volume = volume / 100;
+    }
+    setVolumeIcon();
+  });
+  setVolumeIcon();
+
+  function setVolumeIcon() {
+    var icon = $("#volume");
+    let doTheThing;
+    if (volume <= 0) {
+      doTheThing = `<img class="w-4 h-4" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPg0KPHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0xNi42NTg5IDZDMTYuNTE4NiA1LjIwMjE3IDE2LjI4ODcgNC42ODQ2NyAxNS44NjY5IDQuMzcxNjNDMTUuNzAyNiA0LjI0OTczIDE1LjUxODYgNC4xNTA4OSAxNS4zMjg2IDQuMDgyNDFDMTQuMzM3NSAzLjcyNTI3IDEzLjE1NjkgNC41NDcyOCAxMC43OTU1IDYuMTkxM0wxMC41OTIyIDYuMzMyODRDMTAuMTk1MyA2LjYwOTIyIDkuOTk2NzcgNi43NDc0MSA5Ljc4MzA5IDYuODQ2OTlDOS41NzE4NiA2Ljk0NTQzIDkuMzQ5ODUgNy4wMTU3NiA5LjEyMjE5IDcuMDU2MzVDOC44OTE4OSA3LjA5NzQyIDguNjU0MTQgNy4wOTc0MiA4LjE3ODY1IDcuMDk3NDJDNi45MDI4NyA3LjA5NzQyIDYuMjY0OTggNy4wOTc0MiA1LjcwODQ2IDcuMzY5M0M1LjE5OTk5IDcuNjE3NzEgNC42OTE1MyA4LjEyMjg5IDQuNDI1NzkgOC42NDM2OUM0LjEzNDkzIDkuMjEzNzEgNC4xMDA3MiA5LjgwNjM1IDQuMDMyMyAxMC45OTE2QzQuMDEyMDYgMTEuMzQyMyA0IDExLjY4MzkgNCAxMkM0IDEyLjMxNjEgNC4wMTIwNiAxMi42NTc3IDQuMDMyMyAxMy4wMDg0QzQuMTAwNzIgMTQuMTkzNiA0LjEzNDkzIDE0Ljc4NjMgNC40MjU3OSAxNS4zNTYzQzQuNjkxNTMgMTUuODc3MSA1LjE5OTk5IDE2LjM4MjMgNS43MDg0NiAxNi42MzA3QzYuMjY0OTggMTYuOTAyNiA2LjkwMjg3IDE2LjkwMjYgOC4xNzg2NSAxNi45MDI2QzguNjU0MTQgMTYuOTAyNiA4Ljg5MTg5IDE2LjkwMjYgOS4xMjIxOSAxNi45NDM2QzkuMzQ5ODUgMTYuOTg0MiA5LjU3MTg2IDE3LjA1NDYgOS43ODMwOSAxNy4xNTNDOS45OTY3NyAxNy4yNTI2IDEwLjE5NTMgMTcuMzkwOCAxMC41OTIyIDE3LjY2NzJMMTAuNzk1NSAxNy44MDg3QzEzLjE1NjkgMTkuNDUyNyAxNC4zMzc1IDIwLjI3NDcgMTUuMzI4NiAxOS45MTc2QzE1LjUxODYgMTkuODQ5MSAxNS43MDI2IDE5Ljc1MDMgMTUuODY2OSAxOS42Mjg0QzE2LjI4ODcgMTkuMzE1MyAxNi41MTg2IDE4Ljc5NzggMTYuNjU4OSAxOCIgc3Ryb2tlPSIjMUMyNzRDIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+DQo8cGF0aCBkPSJNMjAgOS4wMDAwMkwxNCAxNU0xNCA5TDE5Ljk5OTkgMTUiIHN0cm9rZT0iIzFDMjc0QyIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPg0KPC9zdmc+">`
+    } else if (volume >= 50) {
+      doTheThing = `<img class="w-4 h-4" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPg0KPHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0xLjUzNDc5IDEwLjk3MTRDMS42MDg0NyA5Ljc2MjU1IDEuNjQ1MzEgOS4xNTgxNCAxLjk1ODU0IDguNTc2NzlDMi4yNDQ3MyA4LjA0NTYzIDIuNzkyMyA3LjUzMDQyIDMuMzM5ODggNy4yNzcwN0MzLjkzOTIxIDYuOTk5NzkgNC42MjYxNyA2Ljk5OTc5IDYuMDAwMDggNi45OTk3OUM2LjUxMjE1IDYuOTk5NzkgNi43NjgxOSA2Ljk5OTc5IDcuMDE2MiA2Ljk1NzkxQzcuMjYxMzggNi45MTY1IDcuNTAwNDYgNi44NDQ3OCA3LjcyNzk1IDYuNzQ0MzhDNy45NTgwNiA2LjY0MjgzIDguMTcxODEgNi41MDE4OSA4LjU5OTMyIDYuMjIwMDJMOC44MTgyNSA2LjA3NTY2QzExLjM2MTIgNC4zOTg5OCAxMi42MzI3IDMuNTYwNjMgMTMuNzAwMSAzLjkyNDg3QzEzLjkwNDcgMy45OTQ3IDE0LjEwMjggNC4wOTU1MSAxNC4yNzk3IDQuMjE5ODRDMTUuMjAyNCA0Ljg2ODI5IDE1LjI3MjUgNi4zNzY5OSAxNS40MTI3IDkuMzk0NEMxNS40NjQ2IDEwLjUxMTcgMTUuNSAxMS40Njc5IDE1LjUgMTEuOTk5OEMxNS41IDEyLjUzMTcgMTUuNDY0NiAxMy40ODc5IDE1LjQxMjcgMTQuNjA1MkMxNS4yNzI1IDE3LjYyMjYgMTUuMjAyNCAxOS4xMzEzIDE0LjI3OTcgMTkuNzc5N0MxNC4xMDI4IDE5LjkwNDEgMTMuOTA0NyAyMC4wMDQ5IDEzLjcwMDEgMjAuMDc0N0MxMi42MzI3IDIwLjQzODkgMTEuMzYxMiAxOS42MDA2IDguODE4MjUgMTcuOTIzOUw4LjU5OTMyIDE3Ljc3OTZDOC4xNzE4MSAxNy40OTc3IDcuOTU4MDYgMTcuMzU2NyA3LjcyNzk1IDE3LjI1NTJDNy41MDA0NiAxNy4xNTQ4IDcuMjYxMzggMTcuMDgzMSA3LjAxNjIgMTcuMDQxN0M2Ljc2ODE5IDE2Ljk5OTggNi41MTIxNSAxNi45OTk4IDYuMDAwMDggMTYuOTk5OEM0LjYyNjE3IDE2Ljk5OTggMy45MzkyMSAxNi45OTk4IDMuMzM5ODggMTYuNzIyNUMyLjc5MjMgMTYuNDY5MiAyLjI0NDczIDE1Ljk1MzkgMS45NTg1NCAxNS40MjI4QzEuNjQ1MzEgMTQuODQxNCAxLjYwODQ3IDE0LjIzNyAxLjUzNDc5IDEzLjAyODJDMS41MTI5OSAxMi42NzA2IDEuNSAxMi4zMjIyIDEuNSAxMS45OTk4QzEuNSAxMS42Nzc0IDEuNTEyOTkgMTEuMzI5IDEuNTM0NzkgMTAuOTcxNFoiIHN0cm9rZT0iIzFDMjc0QyIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4NCjxwYXRoIGQ9Ik0yMCA2QzIwIDYgMjEuNSA3LjggMjEuNSAxMkMyMS41IDE2LjIgMjAgMTggMjAgMTgiIHN0cm9rZT0iIzFDMjc0QyIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPg0KPHBhdGggZD0iTTE4IDlDMTggOSAxOC41IDkuOSAxOC41IDEyQzE4LjUgMTQuMSAxOCAxNSAxOCAxNSIgc3Ryb2tlPSIjMUMyNzRDIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+DQo8L3N2Zz4=">`
+    } else {
+      doTheThing = `<img class="w-4 h-4" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IS0tIFVwbG9hZGVkIHRvOiBTVkcgUmVwbywgd3d3LnN2Z3JlcG8uY29tLCBHZW5lcmF0b3I6IFNWRyBSZXBvIE1peGVyIFRvb2xzIC0tPg0KPHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCjxwYXRoIGQ9Ik0xLjUzNDc5IDEwLjk3MTRDMS42MDg0NyA5Ljc2MjU1IDEuNjQ1MzEgOS4xNTgxNCAxLjk1ODU0IDguNTc2NzlDMi4yNDQ3MyA4LjA0NTYzIDIuNzkyMyA3LjUzMDQyIDMuMzM5ODggNy4yNzcwN0MzLjkzOTIxIDYuOTk5NzkgNC42MjYxNyA2Ljk5OTc5IDYuMDAwMDggNi45OTk3OUM2LjUxMjE1IDYuOTk5NzkgNi43NjgxOSA2Ljk5OTc5IDcuMDE2MiA2Ljk1NzkxQzcuMjYxMzggNi45MTY1IDcuNTAwNDYgNi44NDQ3OCA3LjcyNzk1IDYuNzQ0MzhDNy45NTgwNiA2LjY0MjgzIDguMTcxODEgNi41MDE4OSA4LjU5OTMyIDYuMjIwMDJMOC44MTgyNSA2LjA3NTY2QzExLjM2MTIgNC4zOTg5OCAxMi42MzI3IDMuNTYwNjMgMTMuNzAwMSAzLjkyNDg3QzEzLjkwNDcgMy45OTQ3IDE0LjEwMjggNC4wOTU1MSAxNC4yNzk3IDQuMjE5ODRDMTUuMjAyNCA0Ljg2ODI5IDE1LjI3MjUgNi4zNzY5OSAxNS40MTI3IDkuMzk0NEMxNS40NjQ2IDEwLjUxMTcgMTUuNSAxMS40Njc5IDE1LjUgMTEuOTk5OEMxNS41IDEyLjUzMTcgMTUuNDY0NiAxMy40ODc5IDE1LjQxMjcgMTQuNjA1MkMxNS4yNzI1IDE3LjYyMjYgMTUuMjAyNCAxOS4xMzEzIDE0LjI3OTcgMTkuNzc5N0MxNC4xMDI4IDE5LjkwNDEgMTMuOTA0NyAyMC4wMDQ5IDEzLjcwMDEgMjAuMDc0N0MxMi42MzI3IDIwLjQzODkgMTEuMzYxMiAxOS42MDA2IDguODE4MjUgMTcuOTIzOUw4LjU5OTMyIDE3Ljc3OTZDOC4xNzE4MSAxNy40OTc3IDcuOTU4MDYgMTcuMzU2NyA3LjcyNzk1IDE3LjI1NTJDNy41MDA0NiAxNy4xNTQ4IDcuMjYxMzggMTcuMDgzMSA3LjAxNjIgMTcuMDQxN0M2Ljc2ODE5IDE2Ljk5OTggNi41MTIxNSAxNi45OTk4IDYuMDAwMDggMTYuOTk5OEM0LjYyNjE3IDE2Ljk5OTggMy45MzkyMSAxNi45OTk4IDMuMzM5ODggMTYuNzIyNUMyLjc5MjMgMTYuNDY5MiAyLjI0NDczIDE1Ljk1MzkgMS45NTg1NCAxNS40MjI4QzEuNjQ1MzEgMTQuODQxNCAxLjYwODQ3IDE0LjIzNyAxLjUzNDc5IDEzLjAyODJDMS41MTI5OSAxMi42NzA2IDEuNSAxMi4zMjIyIDEuNSAxMS45OTk4QzEuNSAxMS42Nzc0IDEuNTEyOTkgMTEuMzI5IDEuNTM0NzkgMTAuOTcxNFoiIHN0cm9rZT0iIzFDMjc0QyIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4NCjxwYXRoIGQ9Ik0xOCA5QzE4IDkgMTguNSA5LjkgMTguNSAxMkMxOC41IDE0LjEgMTggMTUgMTggMTUiIHN0cm9rZT0iIzFDMjc0QyIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPg0KPC9zdmc+">`;
+    }
+    icon.html(doTheThing);
+  }
+}
+
 function pomodoroStart() {
-  // timerSetFor is the master time, timeRemaining is the more dynamic one
+  // timerSetFor is the master time, timeRemaining is the more dynamic one. all units are in seconds.
   var timerSetFor = 1500;
   var timeRemaining = 1500;
   var timerInterval = undefined;
