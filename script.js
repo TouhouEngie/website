@@ -9,6 +9,7 @@
 const json = "https://fileserver.touhouengie.com/drive/webpage_data";
 var largestIndex = 1;
 var audio = null;
+var volume = 100;
 var appList = undefined;
 var deez = new Date();
 
@@ -20,6 +21,7 @@ setInterval(timePerSecond, 1000);
 time();
 setWindows();
 getLatestCommitId();
+setVolume();
 
 
 // the lone dropdown menu (not very lonely anymore)
@@ -29,15 +31,22 @@ $("#dropdownopen").on("click", function(event) {
 });
 $(document).on("click", function() {
   closeWindow("#dropdownmenu");
+  closeWindow("#pageringwidget");
 });
-$("#time").on("click", function(event) {
-  event.stopPropagation();
-  if ($("#datewidget").is(":visible")) {
-    closeWindow("#datewidget");
-  } else {
-    openWindow("#datewidget");
-  }
-});
+setTopBarWidgets('#time', '#datewidget');
+setTopBarWidgets('#webring', '#pageringwidget');
+setTopBarWidgets('#volume', '#volumewidget');
+
+function setTopBarWidgets(widget, content) {
+  $(widget).on("click", function(event) {
+    event.stopPropagation();
+    if ($(content).is(":visible")) {
+      closeWindow(content);
+    } else {
+      openWindow(content);
+    }
+  });
+}
 
 // navbar logic
 var a = 0;
@@ -223,7 +232,7 @@ function timePerSecond() {
 
   hour = hour % 12;
   hour = hour ? hour : 12;
-  minute = convertToProperMinutesOrSeconds(minute);
+  minute = minute.toString().padStart(2, "0");
 
   const actualTime = `${hour}:${minute} ${period}`;
   if (actualTime === "12:00 AM") {
@@ -231,13 +240,6 @@ function timePerSecond() {
   }
   $("#time").html(actualTime);
 }
-
-// used for both mp3 player and current time
-function convertToProperMinutesOrSeconds(minutes) {
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  return minutes;
-}
-
 
 // all apps
 async function noteviewStart() {
@@ -370,11 +372,9 @@ async function musicplayerStart() {
   });
   $("#pause").on('click', function() {
     if (!audio.paused) {
-      // context.suspend();
       audio.pause();
       $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`);
     } else {
-      // context.resume();
       audio.play();
       $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`);
     }
@@ -510,14 +510,15 @@ async function musicplayerStart() {
     }
     audio = new Audio(json.concat(song.file));
     audio.crossOrigin = "anonymous";
+    audio.volume = volume / 100;
     $("#thumbnail").html(`<img src="${json.concat(song.image)}">`);
     $("#songtitle").html(`<h3>${song.title}</h3>`);
     $("#songauthor").html(`<p>${song.author}</p>`);
     $('#pausebutton').html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`);
     audio.addEventListener('timeupdate', function() {
       $("#seekbar").val((this.currentTime / this.duration) * 100);
-      currentProgressInSeconds = convertToProperMinutesOrSeconds(Math.round(this.currentTime) % 60);
-      totalProgressInSeconds = convertToProperMinutesOrSeconds(Math.round(this.duration) % 60);
+      currentProgressInSeconds = (Math.round(this.currentTime) % 60).toString().padStart(2, "0");
+      totalProgressInSeconds = (Math.round(this.duration) % 60).toString().padStart(2, "0");
       $("#seekprogress").html(`${(Math.floor(Math.round(this.currentTime) / 60))}:${currentProgressInSeconds}`);
       $("#totalprogress").html(`${Math.floor(Math.round(this.duration) / 60)}:${totalProgressInSeconds}`);
     });
@@ -535,16 +536,13 @@ async function musicplayerStart() {
       }));
     }
     audio.play();
-    // play_and_draw();
     audio.addEventListener('ended', function() {
       invokeNextSong(song);
     });
     audio.addEventListener('pause', function() {
-      // context.suspend();
       $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`);
     });
     audio.addEventListener('play', function() {
-      // context.resume();
       $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M2 6c0-1.886 0-2.828.586-3.414S4.114 2 6 2s2.828 0 3.414.586S10 4.114 10 6v12c0 1.886 0 2.828-.586 3.414S7.886 22 6 22s-2.828 0-3.414-.586S2 19.886 2 18zm12 0c0-1.886 0-2.828.586-3.414S16.114 2 18 2s2.828 0 3.414.586S22 4.114 22 6v12c0 1.886 0 2.828-.586 3.414S19.886 22 18 22s-2.828 0-3.414-.586S14 19.886 14 18z"/></svg>`);
     });
   }
@@ -570,8 +568,41 @@ async function musicplayerStart() {
   // TODO: Set visualizer as an optional (experimental) setting, and squash the syncronization bugs related with the web audio API
 }
 
+function setVolume() {
+  var slider = document.getElementById("volumeslider")
+  slider.addEventListener("input", function() {
+    volume = slider.value;
+    $("#volumepercent").html(`${volume}%`);
+    let allOtherAudio = document.getElementsByTagName("audio");
+    for (var i = 0; i < allOtherAudio.length; i++) {
+      allOtherAudio[i].volume = volume / 100;
+    }
+    if (audio) {
+      audio.volume = volume / 100;
+    }
+    setVolumeIcon();
+  });
+  setVolumeIcon();
+
+  function setVolumeIcon() {
+    var icon = $("#volume");
+    let doTheThing;
+    if (volume <= 0) {
+      doTheThing = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><title>Muted-linear SVG Icon</title><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5" d="M16.659 6c-.14-.798-.37-1.315-.792-1.628a2.113 2.113 0 0 0-.538-.29c-.992-.357-2.172.465-4.533 2.11l-.204.14c-.397.277-.595.415-.809.515a2.676 2.676 0 0 1-.66.21c-.231.04-.469.04-.944.04c-1.276 0-1.914 0-2.47.272c-.509.249-1.017.754-1.283 1.275c-.291.57-.325 1.162-.394 2.348c-.02.35-.032.692-.032 1.008c0 .316.012.658.032 1.008c.069 1.186.103 1.778.394 2.348c.266.521.774 1.026 1.282 1.275c.557.272 1.195.272 2.47.272c.476 0 .714 0 .944.04c.228.041.45.112.661.21c.214.1.412.238.81.514l.203.142c2.36 1.644 3.542 2.466 4.533 2.109c.19-.069.374-.168.538-.29c.422-.313.652-.83.792-1.628M20 9l-6 6m0-6l6 6"/></svg>`
+    } else if (volume <= 33) {
+      doTheThing = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><title>Volume-linear SVG Icon</title><path fill="none" stroke="currentColor" stroke-width="1.5" d="M5.035 10.971c.073-1.208.11-1.813.424-2.394a3.215 3.215 0 0 1 1.38-1.3C7.44 7 8.127 7 9.5 7c.512 0 .768 0 1.016-.042c.245-.042.485-.113.712-.214c.23-.101.444-.242.871-.524l.22-.144C14.86 4.399 16.132 3.56 17.2 3.925c.205.07.403.17.58.295c.922.648.992 2.157 1.133 5.174A68.21 68.21 0 0 1 19 12c0 .532-.035 1.488-.087 2.605c-.14 3.018-.21 4.526-1.133 5.175a2.314 2.314 0 0 1-.58.295c-1.067.364-2.339-.474-4.882-2.151l-.219-.144c-.427-.282-.64-.423-.871-.525a2.998 2.998 0 0 0-.712-.213C10.268 17 10.012 17 9.5 17c-1.374 0-2.06 0-2.66-.277a3.215 3.215 0 0 1-1.381-1.3c-.314-.582-.35-1.186-.424-2.395A17.127 17.127 0 0 1 5 12c0-.323.013-.671.035-1.029Z"/></svg>`
+    // for any coders looking here in the latter half of the 21st century: no, this was not a technical issue, it was to spite the brainrotten dipsh!ts who ruined a perfectly good number.
+    } else if (volume >= (64+3)){
+      doTheThing = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><title>Volume-loud-linear SVG Icon</title><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.535 10.971c.073-1.208.11-1.813.424-2.394a3.215 3.215 0 0 1 1.38-1.3C3.94 7 4.627 7 6 7c.512 0 .768 0 1.016-.042a3 3 0 0 0 .712-.214c.23-.101.444-.242.871-.524l.22-.144C11.36 4.399 12.632 3.56 13.7 3.925c.205.07.403.17.58.295c.922.648.993 2.157 1.133 5.174A68.21 68.21 0 0 1 15.5 12c0 .532-.035 1.488-.087 2.605c-.14 3.018-.21 4.526-1.133 5.175a2.314 2.314 0 0 1-.58.295c-1.067.364-2.339-.474-4.882-2.151L8.6 17.78c-.427-.282-.64-.423-.871-.525a3 3 0 0 0-.712-.213C6.768 17 6.512 17 6 17c-1.374 0-2.06 0-2.66-.277a3.215 3.215 0 0 1-1.381-1.3c-.314-.582-.35-1.186-.424-2.395A17.127 17.127 0 0 1 1.5 12c0-.323.013-.671.035-1.029Z"/><path stroke-linecap="round" d="M20 6s1.5 1.8 1.5 6s-1.5 6-1.5 6m-2-9s.5.9.5 3s-.5 3-.5 3"/></g></svg>`
+    } else {
+      doTheThing = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><title>Volume-small-linear SVG Icon</title><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.535 10.971c.073-1.208.11-1.813.424-2.394a3.215 3.215 0 0 1 1.38-1.3C3.94 7 4.627 7 6 7c.512 0 .768 0 1.016-.042a3 3 0 0 0 .712-.214c.23-.101.444-.242.871-.524l.22-.144C11.36 4.399 12.632 3.56 13.7 3.925c.205.07.403.17.58.295c.922.648.993 2.157 1.133 5.174A68.21 68.21 0 0 1 15.5 12c0 .532-.035 1.488-.087 2.605c-.14 3.018-.21 4.526-1.133 5.175a2.314 2.314 0 0 1-.58.295c-1.067.364-2.339-.474-4.882-2.151L8.6 17.78c-.427-.282-.64-.423-.871-.525a3 3 0 0 0-.712-.213C6.768 17 6.512 17 6 17c-1.374 0-2.06 0-2.66-.277a3.215 3.215 0 0 1-1.381-1.3c-.314-.582-.35-1.186-.424-2.395A17.127 17.127 0 0 1 1.5 12c0-.323.013-.671.035-1.029Z"/><path stroke-linecap="round" d="M18 9s.5.9.5 3s-.5 3-.5 3"/></g></svg>`;
+    }
+    icon.html(doTheThing);
+  }
+}
+
 function pomodoroStart() {
-  // timerSetFor is the master time, timeRemaining is the more dynamic one
+  // timerSetFor is the master time, timeRemaining is the more dynamic one. all units are in seconds.
   var timerSetFor = 1500;
   var timeRemaining = 1500;
   var timerInterval = undefined;
@@ -623,7 +654,7 @@ function pomodoroStart() {
   function configureTimerText() {
     var minutes = Math.floor(timeRemaining / 60);
     var seconds = timeRemaining % 60;
-    $("#timeremains").html(`${minutes}:${convertToProperMinutesOrSeconds(seconds)}`);
+    $("#timeremains").html(`${minutes}:${(seconds).toString().padStart(2, "0")}`);
   }
 }
 
