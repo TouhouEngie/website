@@ -36,6 +36,7 @@ $(document).on("click", function() {
 setTopBarWidgets('#time', '#datewidget');
 setTopBarWidgets('#webring', '#pageringwidget');
 setTopBarWidgets('#volume', '#volumewidget');
+setTopBarWidgets('#visualizer', '#visualizerwidget');
 
 function setTopBarWidgets(widget, content) {
   $(widget).on("click", function(event) {
@@ -531,7 +532,7 @@ async function musicplayerStart() {
     if (isNotMobileDevice) {
       let visualizer = new Wave(audio, document.getElementById("canvas"));
       visualizer.addAnimation(new visualizer.animations.Lines({
-        lineWidth: 3,
+        lineWidth: 1,
         lineColor: "#fff"
       }));
     }
@@ -661,7 +662,7 @@ function pomodoroStart() {
 
 // window management all the way down
 async function setWindows() {
-  appList = await getJsonData(json, "applist2.json");
+  appList = await getJsonData(json, "applist.json");
   // set all them variables for them windows
   // image viewer is called within gallery, so skip that
   $(function() {
