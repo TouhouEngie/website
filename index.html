@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 
+<!-- 
+    Touhou Engie Operating Environment
+    Copyright (C) 2025 Touhou Engie
+    Licensed under the GPL
+-->
+
 <html lang="en">
     <head>
         <link rel="icon" type="image/png" href="https://fileserver.touhouengie.com/drive/webpage_data/Images/image.png" />
@@ -289,6 +295,7 @@
                                 <svg id="repeatstroke" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 stroke-white" viewBox="0 0 24 24"><path id="repeatbutton" class="fill-white" fill-rule="evenodd" d="M8.47 2.47a.75.75 0 0 1 1.06 0l2 2A.75.75 0 0 1 11 5.75H9a6.25 6.25 0 1 0 0 12.5h.5a.75.75 0 0 1 0 1.5H9a7.75 7.75 0 0 1 0-15.5h.19l-.72-.72a.75.75 0 0 1 0-1.06M13.75 5a.75.75 0 0 1 .75-.75h.5a7.75 7.75 0 0 1 0 15.5h-.19l.72.72a.75.75 0 1 1-1.06 1.06l-2-2a.75.75 0 0 1 .53-1.28h2a6.25 6.25 0 1 0 0-12.5h-.5a.75.75 0 0 1-.75-.75m-1.463 4.307a.75.75 0 0 1 .463.693v4a.75.75 0 0 1-1.5 0v-2.19l-.22.22a.75.75 0 1 1-1.06-1.06l1.5-1.5a.75.75 0 0 1 .817-.163" clip-rule="evenodd"/></svg>
                             </span>
                         </div>
+                        <p id="visualizeropen" class="hidden">Open visualizer...</p>
                     </div>
                     <div>
                         <p class="pointer" id="returntostart"><- Playlist Menu</p>
@@ -297,6 +304,20 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="visualizer" class="border-solid rounded-xl border-4 w-full sm:w-fit absolute top-1/10 sm:left-1/4 text-white border-slate-800 bg-slate-800 hidden">
+            <div id="visualizerheader" class="mt-2 font-semibold flex">
+                <div id="visualizerclose" class="w-6 h-6 bg-red-600 rounded-xl border-solid border-black border ml-3 pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-white m-px" viewBox="0 0 24 24" fill="none">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" class="fill-white"/>
+                    </svg>
+                </div>
+                <p class="pl-2">Visualizer</p>
+            </div>
+            <div class="bg-gray-950 m-2 mt-0 rounded-lg w-150 h-100 p-4 text-white overflow-y-scroll">
+                <canvas id="canvas" width="550" height="300"></canvas>
             </div>
         </div>
 
@@ -450,6 +471,7 @@
         
         <!-- jsons stored on an offshore file server -->
         <script src="script.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/foobar404/wave.js/dist/bundle.js"></script>
         <script src="https://pagering.gideon.sh/embed.js" defer></script>
         <script type="text/python" src="main.py"></script>
     </body>

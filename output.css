@@ -821,6 +821,21 @@
   }
   .sm\:h-120 {
     @media (width >= 40rem) {
+      margin-left: calc(var(--spacing) * 14);
+    }
+  }
+  .sm\:h-140 {
+    @media (width >= 40rem) {
+      height: calc(var(--spacing) * 140);
+    }
+  }
+  .sm\:h-150 {
+    @media (width >= 40rem) {
+      height: calc(var(--spacing) * 104);
+    }
+  }
+  .sm\:h-120 {
+    @media (width >= 40rem) {
       height: calc(var(--spacing) * 120);
     }
   }
