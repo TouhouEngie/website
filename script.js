@@ -15,6 +15,7 @@ time();
 setWindows();
 getLatestCommitId();
 setVolume();
+setOutsideCheckbox();
 
 
 // the lone dropdown menu (not very lonely anymore)
@@ -89,7 +90,6 @@ function setOutsideCheckbox() {
     setCookie("visualizer", document.getElementById("visual").checked, 365);
   });
 }
-setOutsideCheckbox();
 
 function configureSettings() {
   // check cookie

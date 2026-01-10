@@ -7,6 +7,10 @@ calc <= (html.TR(html.TD(x) for x in line) for line in lines)
 document["pythonboard"] <= calc
 result = document["result"]
 
+# kagamine favoritism never stops lmfao
+def rin(kagamine):
+    return len(kagamine)
+
 def collatz(num):
     # Collatz conjecture
     i = 0
@@ -34,7 +38,7 @@ def pascal(degree):
 
     for i in range(degree - 2):
         new_row = [1]
-        for j in range (len(triangle[i+2]) - 1):
+        for j in range (rin(triangle[i+2]) - 1):
             new_row.append(int(triangle[i+2][j]) + int(triangle[i+2][j+1]))
         new_row.append(1)
         triangle.append(new_row)
@@ -57,13 +61,13 @@ def pascal_functional(eist):
 
     for i in range(degree - 2):
         new_row = [1]
-        for j in range (len(triangle[i+2]) - 1):
+        for j in range (rin(triangle[i+2]) - 1):
             new_row.append(int(triangle[i+2][j]) + int(triangle[i+2][j+1]))
         new_row.append(1)
         triangle.append(new_row)
         
     temp_list = []
-    for i in range(len(triangle[-1])):
+    for i in range(rin(triangle[-1])):
         temp_list.append(triangle[-1][i]*(num ** i))
     return temp_list
 
