@@ -5,7 +5,6 @@ var audio = null;
 var volume = 100;
 var appList = undefined;
 var deez = new Date();
-var actualDate = "";
 
 
 // call critical components before we start
