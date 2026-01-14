@@ -175,6 +175,10 @@ function time() {
   let num = deez.getMonth();
   let month = monthInator.format(deez);
   let year = deez.getFullYear();
+
+  console.log(day);
+  console.log(num);
+  console.log(year);
   
   $("#date").html(dateInator.format(deez));
   setCalendar(num, year, month);
@@ -184,9 +188,8 @@ function time() {
   }
 
   function setCalendar(month, year, wordMonth) {
-    let nutz = new Date(year + "-" + (month+1) + "-01").getDay();
-    nutz = month+1 >= 10 ? nutz : nutz - 1;
-    for (var i = 0; i <= nutz; i++) {
+    let nutz = new Date(year, month, 1).getDay();
+    for (var i = 0; i <= nutz - 1; i++) {
       $("#calendar").append('<p></p>');
     }
     for (var i = 1; i <= daysInMonth(month, year); i++) {
