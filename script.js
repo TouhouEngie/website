@@ -175,10 +175,6 @@ function time() {
   let num = deez.getMonth();
   let month = monthInator.format(deez);
   let year = deez.getFullYear();
-
-  console.log(day);
-  console.log(num);
-  console.log(year);
   
   $("#date").html(dateInator.format(deez));
   setCalendar(num, year, month);
