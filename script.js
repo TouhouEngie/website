@@ -186,6 +186,7 @@ function time() {
 
   function setCalendar(month, year, wordMonth) {
     let nutz = new Date(year + "-" + (month+1) + "-01").getDay();
+    nutz = month+1 >= 10 ? nutz : nutz - 1;
     for (var i = 0; i <= nutz; i++) {
       $("#calendar").append('<p></p>');
     }
