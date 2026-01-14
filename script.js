@@ -5,6 +5,7 @@ var audio = null;
 var volume = 100;
 var appList = undefined;
 var deez = new Date();
+var actualDate = "";
 
 
 // call critical components before we start
@@ -26,10 +27,12 @@ $("#dropdownopen").on("click", function(event) {
 $(document).on("click", function() {
   closeWindow("#dropdownmenu");
   closeWindow("#pageringwidget");
+  closeWindow('#easterndatewidget');
 });
 setTopBarWidgets('#time', '#datewidget');
 setTopBarWidgets('#webring', '#pageringwidget');
 setTopBarWidgets('#volume', '#volumewidget');
+setTopBarWidgets('#yetanotherclock', '#easterndatewidget')
 
 function setTopBarWidgets(widget, content) {
   $(widget).on("click", function(event) {
@@ -166,37 +169,35 @@ function configureCursor(num) {
 
 
 function time() {
-    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const monthOfYear = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    
-    let day = deez.getDate();
-    let num = deez.getMonth();
-    let month = monthOfYear[num];
-    let year = deez.getFullYear();
-    let weekday = daysOfWeek[deez.getDay()];
-    
-    const actualDate = `${weekday}, ${month} ${day}, ${year}`;
-    $("#date").html(actualDate);
-    setCalendar(num, year, month);
+  const dateInator = new Intl.DateTimeFormat('en-US', { dateStyle: 'full' });
+  const monthInator = new Intl.DateTimeFormat('en-US', { month: "long" });
+  
+  let day = deez.getDate();
+  let num = deez.getMonth();
+  let month = monthInator.format(deez);
+  let year = deez.getFullYear();
+  
+  $("#date").html(dateInator.format(deez));
+  setCalendar(num, year, month);
 
-    function daysInMonth(month, year) {
-      return new Date(year, (month+1), 0).getDate();
-    }
-
-    function setCalendar(month, year, wordMonth) {
-      let nutz = new Date(year + "-" + (month+1) + "-01").getDay();
-      for (var i = 0; i <= nutz; i++) {
-        $("#calendar").append('<p></p>');
-      }
-      for (var i = 1; i <= daysInMonth(month, year); i++) {
-        $("#calendar").append(`<p id="entry${i}" class="text-center">${i}</p>`);
-      }
-      $(`#entry${day}`).addClass("border-2");
-      $(`#entry${day}`).addClass("rounded-md");
-      $(`#entry${day}`).addClass("-translate-y-0.5");
-      getCalendarDates(wordMonth);
-    }
+  function daysInMonth(month, year) {
+    return new Date(year, (month+1), 0).getDate();
   }
+
+  function setCalendar(month, year, wordMonth) {
+    let nutz = new Date(year + "-" + (month+1) + "-01").getDay();
+    for (var i = 0; i <= nutz; i++) {
+      $("#calendar").append('<p></p>');
+    }
+    for (var i = 1; i <= daysInMonth(month, year); i++) {
+      $("#calendar").append(`<p id="entry${i}" class="text-center">${i}</p>`);
+    }
+    $(`#entry${day}`).addClass("border-2");
+    $(`#entry${day}`).addClass("rounded-md");
+    $(`#entry${day}`).addClass("-translate-y-0.5");
+    getCalendarDates(wordMonth);
+  }
+}
 
 async function getCalendarDates(month) {
   const calendar = await getJsonData(json, "calendar.json");
@@ -217,21 +218,51 @@ async function getCalendarDates(month) {
   configureCursor();
 }
 
+function easternTime(flag) {
+  let localTimeInator = new Intl.DateTimeFormat('en-US', { timeZone: "America/New_York", timeStyle: "short"});
+  var deviation = "";
+  
+  if (deviation === "" || flag) {
+    easternDate();
+  }
+  
+  $("#mylocaldate").html(`My time: ${deviation} at ${localTimeInator.format(deez)}`);
+
+  function easternDate() {
+    let localInator = new Intl.DateTimeFormat('en-US', { timeZone: "America/New_York", day: "numeric"});
+    let convertInator = new Intl.DateTimeFormat('en-US', { day: "numeric"} );
+
+    switch (localInator.format(deez) - convertInator.format(deez)) {
+      case -1:
+        deviation = "Yesterday";
+        break;
+      case 1:
+        deviation = "Tomorrow";
+        break;
+      case 0:
+        deviation = "Today";
+        break;
+      default:
+        deviation = "Huh?";
+    }
+  }
+}
+
 function timePerSecond() {
   deez = new Date();
-  let hour = deez.getHours();
-  let minute = deez.getMinutes();
-  let period = hour >= 12 ? "PM" : "AM";
+  var setEastDate = false;
+  const dateInator = new Intl.DateTimeFormat('en-US', {
+    timeStyle: 'short'
+  });
 
-  hour = hour % 12;
-  hour = hour ? hour : 12;
-  minute = minute.toString().padStart(2, "0");
-
-  const actualTime = `${hour}:${minute} ${period}`;
+  const actualTime = dateInator.format(deez);
   if (actualTime === "12:00 AM") {
     time();
+    setEastDate = true;
   }
   $("#time").html(actualTime);
+  easternTime(setEastDate);
+  setEastDate = false;
 }
 
 // all apps

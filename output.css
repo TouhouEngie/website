@@ -1,4 +1,4 @@
-/*! tailwindcss v4.1.16 | MIT License | https://tailwindcss.com */
+/*! tailwindcss v4.1.17 | MIT License | https://tailwindcss.com */
 @layer properties;
 @layer theme, base, components, utilities;
 @layer theme {
@@ -396,6 +396,12 @@
   }
   .max-h-\[70vh\] {
     max-height: 70vh;
+  }
+  .w-1 {
+    width: calc(var(--spacing) * 1);
+  }
+  .w-1\/2 {
+    width: calc(1/2 * 100%);
   }
   .w-2 {
     width: calc(var(--spacing) * 2);
@@ -816,6 +822,11 @@
       margin-left: calc(var(--spacing) * 14);
     }
   }
+  .sm\:block {
+    @media (width >= 40rem) {
+      display: block;
+    }
+  }
   .sm\:h-104 {
     @media (width >= 40rem) {
       height: calc(var(--spacing) * 104);
@@ -824,6 +835,11 @@
   .sm\:h-120 {
     @media (width >= 40rem) {
       height: calc(var(--spacing) * 120);
+    }
+  }
+  .sm\:h-130 {
+    @media (width >= 40rem) {
+      height: calc(var(--spacing) * 130);
     }
   }
   .sm\:h-140 {
@@ -844,6 +860,21 @@
   .sm\:max-h-130 {
     @media (width >= 40rem) {
       max-height: calc(var(--spacing) * 130);
+    }
+  }
+  .sm\:max-h-140 {
+    @media (width >= 40rem) {
+      max-height: calc(var(--spacing) * 140);
+    }
+  }
+  .sm\:w-35 {
+    @media (width >= 40rem) {
+      width: calc(var(--spacing) * 35);
+    }
+  }
+  .sm\:w-40 {
+    @media (width >= 40rem) {
+      width: calc(var(--spacing) * 40);
     }
   }
   .sm\:w-42 {
@@ -889,11 +920,6 @@
   .sm\:w-140 {
     @media (width >= 40rem) {
       width: calc(var(--spacing) * 140);
-    }
-  }
-  .sm\:w-142 {
-    @media (width >= 40rem) {
-      width: calc(var(--spacing) * 142);
     }
   }
   .sm\:w-150 {
