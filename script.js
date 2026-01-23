@@ -607,59 +607,24 @@ function setVolume() {
 }
 
 function pomodoroStart() {
-  // timerSetFor is the master time, timeRemaining is the more dynamic one. all units are in seconds.
-  var timerSetFor = 1500;
-  var timeRemaining = 1500;
-  var timerInterval = undefined;
-  var breaker = 0;
-  var isBreak = false;
-  var timerRunning = false;
+  timerWorker = new Worker("timerworker.js");
+
   $("#toggletimer").on("click", (function() {
-    toggleTimer(timerSetFor);
+    timerWorker.postMessage("pomodorintime");
   }));
-
-  function toggleTimer(masterTime) {
-    timerSet = masterTime + 2;
-    if (timerRunning) {
-      timerSet = timeRemaining;
-      timerRunning = false;
-      $("#msg").html("Timer paused");
-      clearInterval(timerInterval);
-    } else {
-      timerRunning = true;
-      $("#msg").html("Timer started");
-      timerInterval = setInterval(increment, 1000);
-      setTimeout(() => {
-        clearInterval(timerInterval);
-        incrementTimer();
-      }, (timerSet * 1000));
-    }
-  }
-
-  function increment() {
-    document.getElementById("timer").value = (timeRemaining / timerSetFor);
-    configureTimerText();
-    timeRemaining--;
-  }
   
-  function incrementTimer() {
-    timerRunning = false;
-    isBreak = !(isBreak);
-    breaker++;
-    timerSetFor = isBreak ? 300 : 1500;
-    if (breaker % 7 === 0) {
-      breaker = -1;
-      timerSetFor = 1200;
+  timerWorker.onmessage = (e) => {
+    switch (e.data[0]) {
+      case "clarkson":
+        $("#phase").html(e.data[1]);
+        break;
+      case "startingWindows":
+        $("#msg").html(e.data[1] ? "Timer started" : "Timer paused");
+        break;
+      default:
+        document.getElementById("timer").value = (e.data[1]);
+        $("#timeremains").html(e.data[2]);
     }
-    $("#phase").html(`${Math.floor(breaker / 2) + 1}/4`);
-    timeRemaining = timerSetFor;
-    toggleTimer(timerSetFor);
-  }
-
-  function configureTimerText() {
-    var minutes = Math.floor(timeRemaining / 60);
-    var seconds = timeRemaining % 60;
-    $("#timeremains").html(`${minutes}:${(seconds).toString().padStart(2, "0")}`);
   }
 }
 
