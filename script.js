@@ -282,6 +282,11 @@ async function noteviewStart() {
   configureCursor();
 }
 
+function setImageViewer(link) {
+  $("#imgviewcontents").html(link);
+  openWindow($("#imgview"));
+}
+
 async function galleryStart() {
   const galleryStructure = await getJsonData(json, "gallery.json");
   
@@ -305,8 +310,7 @@ async function galleryStart() {
       });
     } else {
       newEntry.on("click", function() {
-        $("#imgviewcontents").html(setFileSource(inputArray, index));
-        openWindow($("#imgview"));
+        setImageViewer(setFileSource(inputArray, index));
       });
     }
     $("#gallerycontents").append(newEntry);
