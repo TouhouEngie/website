@@ -2,7 +2,7 @@ from browser import document, html
 finale = document["realresult"]
 calc = html.TABLE()
 calc <= html.TR(html.TH(html.DIV("0", id="result"), colspan=3) + html.TD("C"))
-lines = ["789", "456", "123", "0*=", "PXV"]
+lines = ["789", "456", "123", "0*", "PXV"]
 calc <= (html.TR(html.TD(x) for x in line) for line in lines)
 document["pythonboard"] <= calc
 result = document["result"]
@@ -75,7 +75,7 @@ def action(event):
     element = event.target
     value = element.text
     try:
-        if value not in "=CPXV":
+        if value not in "CPXV":
             if result.text in ["0", "error"]:
                 result.text = value
             else:
