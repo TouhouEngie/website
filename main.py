@@ -1,8 +1,8 @@
 from browser import document, html
 finale = document["realresult"]
 calc = html.TABLE()
-calc <= html.TR(html.TH(html.DIV("0", id="result"), colspan=3) + html.TD("C"))
-lines = ["789", "456", "123", "0*", "PXV"]
+calc <= html.TR(html.TH(html.DIV("0", id="result"), colspan=3))
+lines = ["789", "456", "123", "0*C", "PXV"]
 calc <= (html.TR(html.TD(x) for x in line) for line in lines)
 document["pythonboard"] <= calc
 result = document["result"]
