@@ -267,6 +267,9 @@ function timePerSecond() {
 
 // all apps
 async function noteviewStart() {
+  var sidebarOpen = true;
+  var text = "";
+
   const blog = await getJsonData(json, "blog.json");
   for (let i = 0; i < blog.length; i++) {
     var note = blog[i];
@@ -281,6 +284,13 @@ async function noteviewStart() {
   }
   $('#notescontent').html(blog[0].content);
   configureCursor();
+
+  $('#toggletopbar').on("click", function() {
+    $("#history").toggle();
+    text = sidebarOpen ? "Show Topbar" : "Hide Topbar";
+    sidebarOpen = !(sidebarOpen);
+    $("#toggletopbar").html(text);
+  })
 }
 
 function setImageViewer(link) {

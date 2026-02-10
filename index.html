@@ -85,7 +85,7 @@
                 <p>A Personal Hobby Project</p>
                 <p>and a Feature-Limited Operating Environment</p>
                 <p class="text-sm">NOTE: This page uses cookies strictly for storing settings only.</p>
-                <a onclick="openWindow($('#version'));" class="text-sky-400 pointer">Version 1.2.1</a>
+                <a onclick="openWindow($('#version'));" class="text-sky-400 pointer">Version 1.2.2</a>
                 <p class="text-sm">commit <a href="https://github.com/TouhouEngie/website/commits/main/" id="commit"></a></p>
                 <div class="flex gap-0.5 -m-2 justify-center">
                     <a class="pointer" target="_blank" href="https://hack.club"><img alt="hack club" width="88" height="31" src="data:image/gif;base64,R0lGODdhWAAfAOYAAAAAAOw3T+w3UOw6Uu08Tu9DTO1GXfBHS+1JYPFLSfJRSPNVR+9Wa/RbRe9dcfBidfZjQvBlePFpfPdpQfRqW/hsQPJtdvhuP/lzPvR4ePJ6ivt7O/2DOfSEifWEhvOHlv6IOPWJiPSLmvaLhfSRn/eRhPiVhfWZpvacqPagrPenstSrsPertfeuuNqwsfixu/u1q/i3wPm9xd6+rfrDxPrFzPvHv/zJv/zLwvvNzvvN0/vQ1vzQz9PT0/zZ3P3c1v3l5/7s7v7w8v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAQAAAAALAAAAABYAB8AAAf/gCs9g4SFhoeIiYqLjI2JLj0bIByUHBuXGxiaGBcXFRMTEKIQDaUNC6gKCasJBwWvBQSyBAK1tre4ubq7uYMblZaYm5wVn6OipqeprK2ws7K80dLTAr6VmJmbnsajycoKqqywsbMB1OfotdbY2ZqeoMfJqAvgzOPP5un60oMY2MPE4HUzNS+cOGez9imM1k+YtnehBpYqyMwVQmgLM/bq4a8dMW4SldGreBGjxpPqOHrsBJKUvGUHX+HLh/LkoAvDLgzBEREZwVQGE9wrJ2CIjIw6hEiTMEQEvx4VtFXYGe/nSHslbRlFqjQaU6cMe0zg9I6qz4kwV1mUmVDr0YVJ/5c2fTphWyiqN4bsFDlCr14azjT43VqLcNG3uAwM7iog7tdbLIYgeBxEL9hbgyYUizjkhwkYNmzAKEFhAQ0cPHKozkHDAgEaMmLLlhHhsAARsS/bQjFb9ofGSh/bijx5iA8ZNWInN4C5BwSQfk2c6jtCwRAaq155GNKBgFGagjXYljFkgK64thS3AC5AeC3iTPUyqBVDcnMIPSF0Jo2K+qoMPgToAxBDaOAdYrgMEQRtvKCXi2NzDSeZewLUh8B98ew1j38JbDdYgQfu4pd4uziIC4S6wRchffbZMkhVOxXUVwgJXMdWeLbpshV55j3I2InBrSiAirpZ2FwDLpUS4/RI23VwgI2z4GhYgkfxeN6Pt6BYiwEa1DChkEa62IM3DVxXT4fcFXDdLCPmWIuUVZZ35S3qsSdcBH4VJx+LF4r5kpmsNFmADDToYKgMOxQogAa4yaaCBhdu9YAGMpCQiwSUzqaBA+xxmUJsLHT55QuZynCCBj2mtABaC1zHjKAECKbXADguOhhihk2Z3mK2OBjZEDsM+aVTlQmpqkhBrUWOSTU1S80g81ylVkm0OGvtNIMoQE9QQ8lC07Xg6jJIAmdmV9K34aYrJjPmssWsuvBW0wNJWcVrr7ysrPVMtffGO0gBQp3b7709COLIwQgnrPAiMwQCADs="></a>
@@ -228,13 +228,16 @@
         
         <!-- horizontal resize is still plagued with bugs and issues -->
         <div id="noteview" class="border-solid rounded-xl border-4 w-full sm:w-fit absolute top-1/25 sm:left-7/25 text-white border-slate-800 bg-slate-800 hidden overflow-hidden">
-            <div id="noteviewheader" class="mt-2 font-semibold flex">
-                <div id="noteviewclose" class="w-6 h-6 bg-red-600 rounded-xl border-solid border-black border ml-3 pointer hover:bg-red-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-white m-px" viewBox="0 0 24 24" fill="none">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" class="fill-white"/>
-                    </svg>
+            <div id="noteviewheader" class="mt-2 font-semibold flex justify-between">
+                <div class="flex">
+                    <div id="noteviewclose" class="w-6 h-6 bg-red-600 rounded-xl border-solid border-black border ml-3 pointer hover:bg-red-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-white m-px" viewBox="0 0 24 24" fill="none">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" class="fill-white"/>
+                        </svg>
+                    </div>
+                    <p class="pl-2">NoteView</p>
                 </div>
-                <p class="pl-2 ">NoteView</p>
+                <div id="toggletopbar" class="pointer border border-white text-white rounded-md mb-2 mr-6 px-2">Hide Topbar</div>
             </div>
             <div id="history" class="flex justify-between overflow-x-scroll bg-gray-950 m-2 mt-0 rounded-lg w-full sm:w-140 p-2 text-white"></div>
             <div class="bg-gray-950 m-2 mt-0 rounded-lg w-full h-[50vh] sm:h-150 sm:w-140 p-4 text-white overflow-y-auto">
