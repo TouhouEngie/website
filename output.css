@@ -26,6 +26,8 @@
     --color-black: #000;
     --color-white: #fff;
     --spacing: 0.25rem;
+    --container-lg: 32rem;
+    --container-xl: 36rem;
     --container-2xl: 42rem;
     --container-3xl: 48rem;
     --text-xs: 0.75rem;
@@ -846,6 +848,11 @@
       width: 100%;
     }
   }
+  .sm\:max-w-1\/4 {
+    @media (width >= 40rem) {
+      max-width: calc(1/4 * 100%);
+    }
+  }
   .sm\:max-w-2xl {
     @media (width >= 40rem) {
       max-width: var(--container-2xl);
@@ -854,6 +861,16 @@
   .sm\:max-w-3xl {
     @media (width >= 40rem) {
       max-width: var(--container-3xl);
+    }
+  }
+  .sm\:max-w-lg {
+    @media (width >= 40rem) {
+      max-width: var(--container-lg);
+    }
+  }
+  .sm\:max-w-xl {
+    @media (width >= 40rem) {
+      max-width: var(--container-xl);
     }
   }
   .sm\:-translate-x-1\/2 {
