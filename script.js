@@ -185,6 +185,7 @@ function time() {
 
   function setCalendar(month, year, wordMonth) {
     let nutz = new Date(year, month, 1).getDay();
+    $("#calendar").empty()
     for (var i = 0; i <= nutz - 1; i++) {
       $("#calendar").append('<p></p>');
     }
@@ -255,7 +256,7 @@ function timePerSecond() {
   });
 
   const actualTime = dateInator.format(deez);
-  if (actualTime === "12:00 AM") {
+  if (actualTime === "12:00 AM" && deez.getSeconds() === 0) {
     time();
     setEastDate = true;
   }
