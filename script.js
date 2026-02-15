@@ -356,6 +356,10 @@ function interwebzStart() {
   return;
 }
 
+function chatbookStart() {
+  return;
+}
+
 function refreshToHomeScreen() {
   $("#webview").attr('src', "https://fileserver.touhouengie.com/");
 }
