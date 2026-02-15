@@ -2,12 +2,9 @@
 
 /* Current hosting URL: https://fileserver.touhouengie.com/drive/webpage_data/ */
 
-.cursor-1-pointer { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/1/select.cur'), pointer; }
-.cursor-1-normal { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/1/normal.cur'), default; }
-.cursor-1-text { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/1/text_sel.cur'), text; }
-.cursor-2-pointer { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/2/select.cur'), pointer; }
-.cursor-2-normal { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/2/normal.cur'), default; }
-.cursor-2-text { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/2/text.cur'), text; }
+.pointer { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/1/select.cur'), pointer; }
+.normal { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/1/normal.cur'), default; }
+.text { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/1/text_sel.cur'), text; }
 
 /* python scheibe */
 td {

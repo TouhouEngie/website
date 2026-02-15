@@ -8,14 +8,14 @@ var deez = new Date();
 
 
 // call critical components before we start
-configureSettings();
+// configureSettings();
 timePerSecond();
 setInterval(timePerSecond, 1000);
 time();
 setWindows();
 getLatestCommitId();
 setVolume();
-setOutsideCheckbox();
+// setOutsideCheckbox();
 
 
 // the lone dropdown menu (not very lonely anymore)
@@ -57,6 +57,9 @@ $(function() {
 
 
 // cookie getter, setter, and applier functions
+// unfortunately syncing these between sites is going to be a pain,
+// thus I'm temporarily disabling this.
+/*
 function setOutsideCookie(name, event) {
     event.preventDefault();
     setCookie(name, event.target.value, 365);
@@ -113,6 +116,7 @@ function configureSettings() {
     console.log(flag);
   }
 }
+*/
 
 
 // apply the settings from outside to inside
@@ -134,6 +138,7 @@ async function getLatestCommitId() {
     });
 }
 
+/*
 function configureCursor(num) {
     num = num || 1
     // note: this may be an issue later on
@@ -165,6 +170,7 @@ function configureCursor(num) {
       }
     }
 }
+*/
 
 
 function time() {
@@ -215,7 +221,7 @@ async function getCalendarDates(month) {
       $("#event").html(`${month} ${calendar[index].dates[i].day} - ${calendar[index].dates[i].desc}`);
     });
   }
-  configureCursor();
+  // configureCursor();
 }
 
 function easternTime(flag) {
@@ -367,30 +373,6 @@ function refreshToHomeScreen() {
 function pythonStart() {
   return;
 } 
-
-/*
-CORS + copyparty = disaster.
-
-function emailStart() {
-  $('#aForm').on('submit', async function(e) {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData($('#aForm').get(0)).entries());
-    console.log("sending...");
-    const send = await fetch("https://fileserver.touhouengie.com/mail", {
-      method: "POST",
-      headers: { "PW": "p4ssw0rd69" },
-      body: `f=${JSON.stringify(data)}`
-    });
-    if (res.ok) {
-      $('#submitted').removeClass('hidden');
-      $("#form")[0].reset();
-    } else {
-      alert("Error sending message.");
-      console.error(await send.text());
-    }
-  });
-}
-*/
 
 async function musicplayerStart() {
   const playlist = await getJsonData(json, "music.json");
@@ -662,7 +644,7 @@ async function setWindows() {
       let app = appList[i].title;
       $(`#` + app + `close`).on("click", (function() { closeWindow("#" + app) })); // could just do $("#app")
       if (i > 1) {
-        if (i < 7) {
+        if (i < 6) {
           $(`#` + app + `open`).on("click", (function() { openWindow("#" + app) }));
         } else {
           $(`#` + app + `open`).on("click", (function() { iconTap(app) }));
