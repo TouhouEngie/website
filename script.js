@@ -284,12 +284,12 @@ async function noteviewStart() {
     newEntry.html(`<p>${note.title} (${note.date})</p>`);
     newEntry.on("click", function() {
       $('#notescontent').html(blog[i].content);
-      configureCursor();
+      // configureCursor();
     });
     $("#history").append(newEntry);
   }
   $('#notescontent').html(blog[0].content);
-  configureCursor();
+  // configureCursor();
 
   $('#toggletopbar').on("click", function() {
     $("#history").toggle();
