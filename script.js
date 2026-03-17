@@ -8,7 +8,7 @@ var deez = new Date();
 
 
 // call critical components before we start
-// configureSettings();
+configureSettings();
 timePerSecond();
 setInterval(timePerSecond, 1000);
 time();
