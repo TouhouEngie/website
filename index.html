@@ -36,7 +36,7 @@
             <span id="dropdownopen" class="ml-4 font-bold pointer backdrop-blur-md pl-2 pr-2">teOE
                 <span id="dropdownmenu" class="p-2 pb-0 absolute w-40 left-1/100 top-4/3 z-5 bg-gray-800 rounded-md font-normal border-solid border hidden grid-cols-1 gap-0">
                     <p id="welcomeopen" class="pointer">About teOE</p>
-                    <!-- <p id="settingsopen" class="pointer">Settings...</p> -->
+                    <p id="settingsopen" class="pointer">Settings...</p>
                     <p id="aboutopen" class="pointer">More about me</p>
                     <p id="contactopen" class="pointer">Contact me</p>
                     <p id="licenseopen" class="pointer">Copyright Info</p>
@@ -119,7 +119,7 @@
             </div>
         </div>
 
-        <!--
+
         <div id="settings" class="border-solid rounded-xl border-4 w-full sm:w-fit absolute top-1/10 sm:left-1/4 text-white border-slate-800 bg-slate-800 hidden">
             <div id="settingsheader" class="mt-2 font-semibold flex">
                 <div id="settingsclose" class="w-6 h-6 bg-red-600 rounded-xl border-solid border-black border ml-3 pointer">
@@ -131,13 +131,22 @@
             </div>
             <div class="bg-gray-950 m-2 mt-0 rounded-lg w-full sm:w-150 h-120 p-4 text-white overflow-y-auto">
                 <h4>teOE Settings</h4>
+                <label>Cursor:</label>
+                <select id="cursor" name="cursor" class="border normal" onchange="setOutsideCookie(`cursor`, event)">
+                    <option>select...</option>
+                    <option value="0">Default OS cursor</option>
+                    <option value="1">Kagamine Rin cursor A</option>
+                    <option value="2">Kagamine Rin cursor B</option>
+                    <option value="3">N25 Miku cursor</option>
+                    <option value="4" disabled>Mafuyu cursor (coming soon)</option>
+                </select>
+                <p>NOTE: You must refresh the page to apply the new cursor.</p>
                 <div class="flex">
                     <input type="checkbox" id="visual" name="visual" class="pointer">
                     <p class="ml-2">Enable visualizer in media player (experimental)</p>
                 </div>
             </div>
         </div>
-        -->
 
         <div id="about" class="border-solid rounded-xl border-4 w-full sm:w-fit absolute top-1/16 sm:left-25/76 text-white border-slate-800 bg-slate-800 hidden">
             <div id="aboutheader" class="mt-2 font-semibold flex">
@@ -406,11 +415,6 @@
             <div id="pythonopen" class="text-center p-1 drop-shadow-lg w-fit pointer">
                 <img src="https://fileserver.touhouengie.com/drive/webpage_data/Images/python.png" class="w-16 h-16 rounded-md" alt="python">
             </div>
-            <!--
-            <div id="emailopen" class="text-center p-1 drop-shadow-lg w-fit pointer">
-                <img src="https://fileserver.touhouengie.com/drive/webpage_data/Images/mail.png" class="w-16 h-16 rounded-md" alt="email">
-            </div>
-            -->
             <div id="interwebzopen" class="text-center p-1 drop-shadow-lg w-fit pointer">
                 <img src="https://fileserver.touhouengie.com/drive/webpage_data/Images/copyparty.png" class="w-16 h-16 rounded-md" alt="browser">
             </div>

@@ -57,9 +57,8 @@ $(function() {
 
 
 // cookie getter, setter, and applier functions
-// unfortunately syncing these between sites is going to be a pain,
-// thus I'm temporarily disabling this.
-/*
+// todo: fix the iframe issues
+
 function setOutsideCookie(name, event) {
     event.preventDefault();
     setCookie(name, event.target.value, 365);
@@ -116,7 +115,7 @@ function configureSettings() {
     console.log(flag);
   }
 }
-*/
+
 
 
 // apply the settings from outside to inside
@@ -138,7 +137,7 @@ async function getLatestCommitId() {
     });
 }
 
-/*
+
 function configureCursor(num) {
     num = num || 1
     // note: this may be an issue later on
@@ -170,7 +169,7 @@ function configureCursor(num) {
       }
     }
 }
-*/
+
 
 
 function time() {
@@ -221,7 +220,7 @@ async function getCalendarDates(month) {
       $("#event").html(`${month} ${calendar[index].dates[i].day} - ${calendar[index].dates[i].desc}`);
     });
   }
-  // configureCursor();
+  configureCursor();
 }
 
 function easternTime(flag) {
@@ -284,12 +283,12 @@ async function noteviewStart() {
     newEntry.html(`<p>${note.title} (${note.date})</p>`);
     newEntry.on("click", function() {
       $('#notescontent').html(blog[i].content);
-      // configureCursor();
+      configureCursor();
     });
     $("#history").append(newEntry);
   }
   $('#notescontent').html(blog[0].content);
-  // configureCursor();
+  configureCursor();
 
   $('#toggletopbar').on("click", function() {
     $("#history").toggle();
@@ -644,7 +643,7 @@ async function setWindows() {
       let app = appList[i].title;
       $(`#` + app + `close`).on("click", (function() { closeWindow("#" + app) })); // could just do $("#app")
       if (i > 1) {
-        if (i < 6) {
+        if (i < 7) {
           $(`#` + app + `open`).on("click", (function() { openWindow("#" + app) }));
         } else {
           $(`#` + app + `open`).on("click", (function() { iconTap(app) }));
