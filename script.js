@@ -352,9 +352,7 @@ async function galleryStart() {
 }
 
 function gamedemoStart() {
-  $("#thingbutton").on("click", function() {
-    $("#thing").html(`<iframe class="cursor-[url('./cursors/normal.cur'),default]" frameborder="0" src="https://itch.io/embed-upload/15081350?color=333333" allowfullscreen="" width="640" height="380"><a href="https://smirbyrneh420.itch.io/together-or-never-demo">Itch.io link</a></iframe>`);
-  });
+    $("#thing").html(`<iframe frameborder="0" src="https://itch.io/embed-upload/16740430?color=333333" allowfullscreen="" width="512" height="660"><a href="https://touhouengie.itch.io/falling-engie">Play Falling Engie on itch.io</a></iframe>`);
 }
 
 function interwebzStart() {

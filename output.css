@@ -731,6 +731,11 @@
       height: calc(var(--spacing) * 150);
     }
   }
+  .sm\:h-160 {
+    @media (width >= 40rem) {
+      height: calc(var(--spacing) * 160);
+    }
+  }
   .sm\:h-fit {
     @media (width >= 40rem) {
       height: fit-content;
