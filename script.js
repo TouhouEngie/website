@@ -356,11 +356,12 @@ function gamedemoStart() {
 }
 
 function interwebzStart() {
+  $("#interwebzui").html(`<a href="#" onclick="refreshToHomeScreen()">Load Server Homepage</a><iframe id="webview" class="w-full sm:w-150 h-120" src="https://fileserver.touhouengie.com?pw=p4ssw0rd69"></iframe>`);
   return;
 }
 
 function chatbookStart() {
-  return;
+  $("#chatbookui").html(`<iframe id="chatview" class="w-full sm:w-150 h-120" src="https://chatbook.touhouengie.com"></iframe>`);
 }
 
 function refreshToHomeScreen() {

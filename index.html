@@ -327,7 +327,7 @@
                 <p class="pl-2">Hey, a functional game!</p>
             </div>
             <div id="thing" class="bg-gray-950 mt-0 mb-2 rounded-lg w-full sm:w-50 h-full sm:h-160 p-2 text-white overflow-y-auto">
-                
+                <!-- lazy loaded, check gamedemoStart in the JS -->
             </div>
         </div>
         
@@ -340,9 +340,8 @@
                 </div>
                 <p class="pl-2">Server Browser</p>
             </div>
-            <div class="bg-gray-950 m-2 mt-0 rounded-lg p-4 text-white h-full">
-                <a href="#" onclick="refreshToHomeScreen()">Load Server Homepage</a>
-                <iframe id="webview" class="w-full sm:w-150 h-120" src="https://fileserver.touhouengie.com?pw=p4ssw0rd69"></iframe>
+            <div id="interwebzui" class="bg-gray-950 m-2 mt-0 rounded-lg p-4 text-white h-full">
+                <!-- lazy loaded, check interwebzStart in the JS-->
             </div>
         </div>
 
@@ -355,8 +354,8 @@
                 </div>
                 <p class="pl-2">ChatBook (BETA)</p>
             </div>
-            <div class="bg-gray-950 m-2 mt-0 rounded-lg p-4 text-white h-full">
-                <iframe id="chatview" class="w-full sm:w-150 h-120" src="https://chatbook.touhouengie.com"></iframe>
+            <div id="chatbookui" class="bg-gray-950 m-2 mt-0 rounded-lg p-4 text-white h-full">
+                <!-- lazy loaded, check chatbookStart in the JS -->
             </div>
         </div>
 
