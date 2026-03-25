@@ -5,6 +5,7 @@ td {
     border-radius: 0.2em;
     text-align: center;
     cursor: default;
+    color: white;
 }
 #result {
     border-color: #000;
@@ -14,6 +15,6 @@ td {
     text-align: right;
 }
 
-td, p {
+p {
     color: white;
 }
