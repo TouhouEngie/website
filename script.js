@@ -280,8 +280,7 @@ function refreshToHomeScreen() {
 }
 
 function pythonStart() {
-  $("#pythonui").html(`<iframe class="w-full sm:w-150 h-120" src="https:/www.touhouengie.com/python"></iframe>`);
-  console.log("you there?")
+  $("#pythonui").html(`<iframe class="w-full sm:w-150 h-120" src="https:/www.touhouengie.com/python/"></iframe>`);
 } 
 
 async function musicplayerStart() {
