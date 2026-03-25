@@ -13,3 +13,7 @@ td {
     padding: 10px 30px 10px 30px;
     text-align: right;
 }
+
+td, p {
+    color: white;
+}
