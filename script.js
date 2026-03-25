@@ -272,7 +272,7 @@ function interwebzStart() {
 }
 
 function chatbookStart() {
-  $("#chatbookui").html(`<iframe id="chatview" class="w-full sm:w-150 h-120" src="https://chatbook.touhouengie.com"></iframe>`);
+  $("#chatbookui").html(`<iframe id="chatview" class="w-full sm:w-150 h-full sm:h-120" src="https://chatbook.touhouengie.com"></iframe>`);
 }
 
 function refreshToHomeScreen() {
@@ -280,7 +280,7 @@ function refreshToHomeScreen() {
 }
 
 function pythonStart() {
-  $("#pythonui").html(`<iframe class="w-full sm:w-150 h-120" src="https://www.touhouengie.com/python/index.html"></iframe>`);
+  $("#pythonui").html(`<iframe class="w-full sm:w-150 h-full sm:h-120" src="https://www.touhouengie.com/python/index.html"></iframe>`);
 } 
 
 async function musicplayerStart() {
