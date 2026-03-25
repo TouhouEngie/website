@@ -12,18 +12,3 @@
 .cursor-3-normal { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/3/normal.cur'), default; }
 .cursor-3-text { cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/3/text.cur'), text; }
 
-/* python scheibe */
-td {
-    background-color: oklch(74.6% 0.16 232.661);
-    padding: 10px 30px 10px 30px;
-    border-radius: 0.2em;
-    text-align: center;
-    cursor: default;
-}
-#result {
-    border-color: #000;
-    border-width: 1px;
-    border-style: solid;
-    padding: 10px 30px 10px 30px;
-    text-align: right;
-}

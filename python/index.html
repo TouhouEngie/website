@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link rel="icon" type="image/png" href="https://fileserver.touhouengie.com/drive/webpage_data/Images/image.png" />
+        
+        <!-- shifted to proper tailwind CSS method -->
+        <link rel="stylesheet" type="text/css" href="../output.css">
+        <link rel="stylesheet" type="text/css" href="style.css">
+
+        <!-- Brython for the Python showcase -->
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.13.2/brython.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.13.2/brython_stdlib.js"></script>
+
+        <!-- this is all SEO and social media optimizations -->
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Personal webpage for a person who goes on the Internet by many usernames, including Touhou Engie." />
+        <meta content="Touhou Engie" property="og:title" />
+        <meta property="og:type" content="website" />
+        <meta content="https://fileserver.touhouengie.com/drive/webpage-data/Images/image.png" property="og:image" />
+        <meta property="og:url" content="https://www.touhouengie.com/python" />
+        
+        <title>Touhou Engie Operating Environment</title>
+    </head>
+    <body>
+        <p>Use P for Pascal's Triangle.</p>
+        <p>Use X for a polymonial calculator based on Pascal's Triangle. Given (x-y)^z, you input y*z.</p>
+        <p>Use V for the Collatz Conjecture.</p>
+        <div id="pythonboard"></div>
+        <div id="realresult" class="text-center"></div>
+    </body>
+    <script type="text/python" src="main.py"></script>
+</html>
