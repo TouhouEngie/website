@@ -708,6 +708,11 @@
       left: calc(27/100 * 100%);
     }
   }
+  .sm\:h-110 {
+    @media (width >= 40rem) {
+      height: calc(var(--spacing) * 110);
+    }
+  }
   .sm\:h-120 {
     @media (width >= 40rem) {
       height: calc(var(--spacing) * 120);
