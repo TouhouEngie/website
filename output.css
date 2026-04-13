@@ -842,6 +842,15 @@
 .cursor-3-text {
   cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/3/text.cur'), text;
 }
+.cursor-4-pointer {
+  cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/4/select.cur'), pointer;
+}
+.cursor-4-normal {
+  cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/4/normal.cur'), default;
+}
+.cursor-4-text {
+  cursor: url('https://fileserver.touhouengie.com/drive/webpage_data/cursors/4/text.cur'), text;
+}
 @property --tw-translate-x {
   syntax: "*";
   inherits: false;
