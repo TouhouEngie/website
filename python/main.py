@@ -19,7 +19,7 @@ def collatz(num):
             num /= 2
         else:
             num *= 3
-            num += 1 # remove this line for silent mode
+            num += 1
         i += 1
         finale <= html.P(str(num))
         if ((num <= 0) or (num % 1 != 0)):
