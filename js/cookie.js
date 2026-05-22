@@ -30,6 +30,9 @@ function getCookie(cname) {
 }
 
 function configureSettings() {
+  if (!(enableCookies)) {
+    return;
+  }
   // check cookie
   let cursor = getCookie("cursor");
   let visualize = getCookie('visualizer');
@@ -52,6 +55,10 @@ function configureSettings() {
 }
 
 function configureCursor(num) {
+    if (!(enableCookies)) {
+      return;
+    }
+ 
     num = num || 1
     // note: this may be an issue later on
     const cursorPointer = $(".pointer");

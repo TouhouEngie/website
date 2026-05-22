@@ -1,4 +1,7 @@
 // some things just need to be global
+// debug flag. keep this to True.
+const enableCookies = true;
+
 const json = "https://fileserver.touhouengie.com/drive/webpage_data";
 var largestIndex = 1;
 var audio = null;
@@ -58,10 +61,11 @@ $(function() {
 
 function setOutsideCheckbox() {
   // all checkboxes (as of right now) live here. will find a more efficient way soon.
-  
-  $("#visual").on('click', function() {
-    setCookie("visualizer", document.getElementById("visual").checked, 365);
-  });
+  if (enableCookies) {
+    $("#visual").on('click', function() {
+      setCookie("visualizer", document.getElementById("visual").checked, 365);
+    });
+  }
 }
 
 // apply the settings from outside to inside
