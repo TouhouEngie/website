@@ -301,6 +301,7 @@ async function musicplayerStart() {
   loadListOfLists();
   $("#returntostart").on("click", function() {
     loadListOfLists();
+    $("#musicsearchbar").hide();
   });
   $("#pause").on('click', function() {
     if (!audio.paused) {
@@ -348,6 +349,9 @@ async function musicplayerStart() {
       playNextSong(currentPlaylistOrder[index-1]);
     }
   });
+  $("#musicsearchbar").on('input', function() {
+    searchMainline($("#musicsearchbar").val().toLowerCase());
+  });
 
   configureCursor();
   function setSvgAndStuff(vari) {
@@ -374,6 +378,7 @@ async function musicplayerStart() {
       playlistEntry.on('click', (function() {
         $("#playlist").empty();
         if (e < 0) {
+          $("#musicsearchbar").show();
           getAllSongs();
         } else {
           currentPlaylistOrder = (playlist[e].contents);
@@ -390,17 +395,21 @@ async function musicplayerStart() {
     $("#playlist").empty();
     for (let i = 0; i < currentPlaylistOrder.length; i++) {
       var song = currentPlaylistOrder[i];
-      var newSong = $('<li>');
-      newSong.add("pointer");
-      newSong.html(`<p>${song.title}</p><p class="text-xs">${song.author}</p><br>`);
-      newSong.on('click', (function(currentSong) {
-        return function() {
-          // is only called once but it's one hell of a logic segment
-          playSong(currentSong);
-        };
-      })(song));
-      $("#playlist").append(newSong);
+      songConstruction(song);
     }
+  }
+
+  function songConstruction(song) {
+    var newSong = $('<li>');
+    newSong.add("pointer");
+    newSong.html(`<p>${song.title}</p><p class="text-xs">${song.author}</p><br>`);
+    newSong.on('click', (function(currentSong) {
+      return function() {
+        // is only called once but it's one hell of a logic segment
+        playSong(currentSong);
+      };
+    })(song));
+    $("#playlist").append(newSong);
   }
 
   function shuffler() {
@@ -486,6 +495,15 @@ async function musicplayerStart() {
       $("#pause").html(`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M21.409 9.353a2.998 2.998 0 0 1 0 5.294L8.597 21.614C6.534 22.737 4 21.277 4 18.968V5.033c0-2.31 2.534-3.769 4.597-2.648z"/></svg>`);
       audio.pause();
       $("#playingAudio").hide();
+    }
+  }
+  function searchMainline(query) {
+    $("#playlist").empty();
+    for (var i = 0; i < currentPlaylistOrder.length; i++) {
+      let song = currentPlaylistOrder[i];
+      if ((song.title.toLowerCase().indexOf(query) >= 0) || (song.author.toLowerCase().indexOf(query) >= 0)) {
+        songConstruction(song);
+      }
     }
   }
   // TODO: Set visualizer as an optional (experimental) setting, and squash the syncronization bugs related with the web audio API
