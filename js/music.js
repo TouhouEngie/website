@@ -9,6 +9,7 @@ async function musicplayerStart() {
   var index = 0;
   var newClass = "";
   var original = "";
+  var sidebarOpen = true;
   loadListOfLists();
   $("#returntostart").on("click", function() {
     loadListOfLists();
@@ -63,8 +64,28 @@ async function musicplayerStart() {
   $("#musicsearchbar").on('input', function() {
     searchMainline($("#musicsearchbar").val().toLowerCase());
   });
+  $("#hidesonglist").on('click', function() {
+    $("#songlist").toggle();
+    text = sidebarOpen ? "Show Sidebar" : "Hide Sidebar";
+    sidebarOpen = !(sidebarOpen);
+    toggleWindowSize(sidebarOpen);
+    $("#hidesonglist").html(text);
+  });
 
   configureCursor();
+
+  function toggleWindowSize(bool) {
+    // the code's kinda shit but eh
+    let master = ["sm:w-170", "sm:w-91", "grid-cols-1", "grid-cols-2"]
+    let replacer = bool ? master[0] : master[1];
+    let target = bool ? master[1] : master[0];
+    $("#musicwindow").removeClass(target);
+    $("#musicwindow").addClass(replacer);
+    target = bool ? master[2] : master[3];
+    replacer = bool ? master[3] : master[2];
+    $("#musicplayercontents").removeClass(target);
+    $("#musicplayercontents").addClass(replacer);
+  }
   function setSvgAndStuff(vari) {
     eval(vari + ` = !(` + vari + `)`);
     var variName = eval(vari);
