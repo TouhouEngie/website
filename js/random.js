@@ -1,0 +1,3 @@
+const list = ["Dangit, Golshi dived into the cables again!", "Failed to enter SEKAI", "Help, I accidentally noclipped into here", "I told you not to train on zero energy!", "Huh...the tree here's all black and wilted.", "Yo who replaced the entire backend with BAKUSHIN?!", "The melody of this song still doesn't capture Mafuyu's warmth...", "WonderhoLY scheiße!"]
+const num = (Math.floor(Math.random() * list.length));
+document.getElementById("errortext").innerText = list[num];
