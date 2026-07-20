@@ -1,6 +1,6 @@
 // some things just need to be global
 // debug flag. keep this to True.
-const enableCookies = true;
+const enableCookies = false;
 
 const json = "https://fileserver.touhouengie.com/drive/webpage_data";
 var largestIndex = 1;
@@ -12,6 +12,7 @@ var tempAuthorString = ""; // where the hell else am i to put this without havin
 
 
 // call critical components before we start
+checkFileserver();
 configureSettings();
 timePerSecond();
 setInterval(timePerSecond, 1000);
@@ -46,6 +47,23 @@ function setTopBarWidgets(widget, content) {
       openWindow(content);
     }
   });
+}
+
+async function checkFileserver() {
+  const check = await fetch(json.concat("/wallpaper.png"));
+  if (!check.ok) {
+    if (largestIndex > 3) {
+      throw new Error("fuck");
+      window.location.replace("https://www.touhouengie.com/404.html");
+    } else {
+      console.log("retrying");
+      largestIndex++;
+      checkFileserver();
+    }
+  } else {
+    console.log("memtest ok");
+    largestIndex = 1;
+  }
 }
 
 // navbar logic
