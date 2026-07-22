@@ -1,6 +1,6 @@
 // some things just need to be global
 // debug flag. keep this to True.
-const enableCookies = true;
+const enableCookies = false;
 
 const json = "https://fileserver.touhouengie.com/drive/webpage_data";
 var largestIndex = 1;
@@ -49,9 +49,18 @@ function setTopBarWidgets(widget, content) {
   });
 }
 
+// still doesn't work but fileserver hasn't imploded yet
 async function checkFileserver() {
-  const check = await fetch(json.concat("/wallpaper.png"));
-  if (!check.ok) {
+  var isFucked = false;
+  try {
+    const check = await fetch(json.concat("/wallpaper.png"));
+    if (!check.ok) {
+      isFucked = true;
+    }
+  } catch (TypeError) {
+    isFucked = true;
+  }
+  if (isFucked) {
     if (largestIndex > 3) {
       throw new Error("fuck");
       window.location.replace("https://www.touhouengie.com/404.html");
