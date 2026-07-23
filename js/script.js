@@ -62,7 +62,6 @@ async function checkFileserver() {
   }
   if (isFucked) {
     if (largestIndex > 3) {
-      throw new Error("fuck");
       window.location.replace("https://www.touhouengie.com/404.html");
     } else {
       console.log("retrying");
