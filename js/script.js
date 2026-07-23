@@ -1,6 +1,6 @@
 // some things just need to be global
 // debug flag. keep this to True.
-const enableCookies = true;
+const enableCookies = false;
 
 const json = "https://fileserver.touhouengie.com/drive/webpage_data";
 var largestIndex = 1;
@@ -62,7 +62,7 @@ async function checkFileserver() {
   }
   if (isFucked) {
     if (largestIndex > 3) {
-      window.location.replace("https://www.touhouengie.com/404.html");
+      window.location.replace("https://www.touhouengie.com/ded.html");
     } else {
       console.log("retrying");
       largestIndex++;
