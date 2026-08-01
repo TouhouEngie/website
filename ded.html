@@ -40,8 +40,28 @@
         a {
             color: #8889cc;
         }
-        a:click {
+        a:active {
             color: #8889cc;
+        }
+
+        .important {
+            background: linear-gradient(-45deg, #8889cc, #bb6588, #ccaa87, #e4a8ca);
+            background-size: 200% 200%;
+            background-clip: text;
+            color: transparent;
+            animation: ninetiesInternet 3s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes ninetiesInternet {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
     </style>
     <script src="js/bsod.js"></script>
