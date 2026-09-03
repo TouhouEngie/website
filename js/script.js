@@ -286,7 +286,7 @@ async function galleryStart() {
 
   function setFileSource(inputArray, index) {
     if (inputArray[index].artFromCopyparty) {
-      return `<img src="${json}/Images/gallery/${inputArray[index].contents}">`
+      return `<img src="${json}/${inputArray[index].contents}">`
     }
     return inputArray[index].contents;
   }
