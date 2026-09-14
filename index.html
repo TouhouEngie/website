@@ -27,7 +27,7 @@
         <title>Touhou Engie Operating Environment</title>
     </head>
 
-    <body id="desktop" class="font-sans bg-cover h-screen bg-sky-500 bg-[url(https://fileserver.touhouengie.com/drive/webpage_data/wallpaper.png)] overflow-hidden normal">
+    <body id="desktop" class="font-sans bg-cover h-screen bg-sky-500 bg-[url(https://fileserver.touhouengie.com/drive/webpage_data/wallpaper.png)] bg-center overflow-hidden normal">
         <div id="topbar" class="flex justify-between absolute w-full backdrop-blur-md bg-[rgba(0, 0, 0, 0.25)] items-center text-white">
             <span id="dropdownopen" class="ml-4 font-bold pointer backdrop-blur-md pl-2 pr-2">teOE
                 <span id="dropdownmenu" class="p-2 pb-0 absolute w-40 left-1/100 top-4/3 z-5 bg-gray-800 rounded-md font-normal border-solid border hidden grid-cols-1 gap-0">
@@ -78,9 +78,8 @@
                 <img class="mx-auto w-32 h-32" src="https://fileserver.touhouengie.com/drive/webpage_data/Images/image.png" alt="Profile pic">
                 <h2 class="font-bold">teOE</h2>
                 <p>The Touhou Engie Desktop Experience</p>
-                <p>A Personal Hobby Project</p>
-                <p>and a Feature-Limited Operating Environment</p>
-                <p class="text-sm">NOTE: This page uses cookies strictly for storing settings only.</p>
+                <p class="text-sm">A Feature-Limited Operating Environment</p>
+                <p class="text-xs">NOTE: This page uses cookies strictly for storing settings only.</p>
                 <a onclick="openWindow($('#version'));" class="text-sky-400 pointer">Version 1.4</a>
                 <p class="text-sm">commit <a href="https://github.com/TouhouEngie/website/commits/main/" id="commit" class="pointer"></a></p>
                 <div class="flex gap-0.5 -m-2 justify-center">
@@ -400,39 +399,41 @@
                 <p>Coming soon...</p>
             </div>
         </div>
-        
-        
-        <div id="desktopApps" class="flex justify-center flex-row bg-[rgba(0, 0, 0, 0.25)] backdrop-blur-md rounded-lg border border-gray-700 fixed bottom-2 sm:left-1/2 sm:-translate-x-1/2">
-            <div id="noteviewopen" class="text-center p-1 drop-shadow-lg w-fit pointer">
+
+        <!-- todo: add border border-gray-700 and remove last 2 sm: flags after fixing centering issue-->
+
+        <div id="desktopApps" class="fixed grid grid-cols-5 sm:flex justify-center sm:flex-row bg-[rgba(0, 0, 0, 0.25)] backdrop-blur-md rounded-lg bottom-0 sm:left-1/2 sm:-translate-x-1/2 sm:backdrop-blur-none sm:bg-none">
+            <div id="noteviewopen" class="text-center p-1 drop-shadow-lg w-fit pointer shrink-0">
                 <img src="https://fileserver.touhouengie.com/drive/webpage_data/Images/noteview.png" class="w-16 h-16 rounded-md" alt="noteview">
             </div>
-            <div id="galleryopen" class="text-center p-1 drop-shadow-lg w-fit pointer">
+            <div id="galleryopen" class="text-center p-1 drop-shadow-lg w-fit pointer shrink-0">
                 <img src="https://fileserver.touhouengie.com/drive/webpage_data/Images/gallery.png" class="w-16 h-16 rounded-md" alt="gallery">
             </div>
-            <div id="musicplayeropen" class="text-center p-1 pb-0 drop-shadow-lg w-fit pointer">
+            <div id="musicplayeropen" class="text-center p-1 pb-0 drop-shadow-lg w-fit pointer shrink-0">
                 <img src="https://fileserver.touhouengie.com/drive/webpage_data/Images/music.png" class="w-16 h-16 rounded-md" alt="musicplayer">
                 <div class="rounded-2xl w-1 h-1 bg-gray-900 translate-x-7.25 -translate-y-1 hidden" id="playingAudio"></div>
             </div>
-            <div id="gamedemoopen" class="text-center p-1 drop-shadow-lg w-fit pointer">
+            <div id="gamedemoopen" class="text-center p-1 drop-shadow-lg w-fit pointer shrink-0">
                 <img src="https://fileserver.touhouengie.com/drive/webpage_data/Images/godot.png" class="w-16 h-16 rounded-md" alt="gamedemo">
             </div>
-            <div id="pythonopen" class="text-center p-1 drop-shadow-lg w-fit pointer">
+            <div id="pythonopen" class="text-center p-1 drop-shadow-lg w-fit pointer shrink-0">
                 <img src="https://fileserver.touhouengie.com/drive/webpage_data/Images/python.png" class="w-16 h-16 rounded-md" alt="python">
             </div>
-            <div id="interwebzopen" class="text-center p-1 drop-shadow-lg w-fit pointer">
+            <div id="interwebzopen" class="text-center p-1 drop-shadow-lg w-fit pointer shrink-0">
                 <img src="https://fileserver.touhouengie.com/drive/webpage_data/Images/copyparty.png" class="w-16 h-16 rounded-md" alt="browser">
             </div>
-            <div id="pomodoroopen" class="text-center p-1 drop-shadow-lg w-fit pointer">
+            <div id="pomodoroopen" class="text-center p-1 drop-shadow-lg w-fit pointer shrink-0">
                 <img src="https://fileserver.touhouengie.com/drive/webpage_data/Images/timer.png" class="w-16 h-16 rounded-md" alt="pomodoro timer">
             </div>
-            <div id="chatbookopen" class="text-center p-1 drop-shadow-lg w-fit pointer">
+            <div id="chatbookopen" class="text-center p-1 drop-shadow-lg w-fit pointer shrink-0">
                 <img src="https://fileserver.touhouengie.com/drive/webpage_data/Images/mail.png" class="w-16 h-16 rounded-md" alt="email">
             </div>
-            <div id="projektopen" class="text-center p-1 drop-shadow-lg w-fit pointer">
-                <img src="https://fileserver.touhouengie.com/drive/webpage_data/Images/pfps/symboli_kris_s.png" class="w-16 h-16 rounded-md" alt="projects">
+            <div id="projektopen" class="text-center p-1 drop-shadow-lg w-fit pointer shrink-0">
+                <img src="https://fileserver.touhouengie.com/drive/webpage_data/Images/pfps/symboli_kris_s.png" class="w-16 h-16  rounded-md" alt="projects">
             </div>
 
         </div>
+        
 
         <!-- window boilerplate
             <div id="window" class="border-solid rounded-xl border-4 w-full sm:w-fit absolute top-1/10 sm:left-1/4 text-white border-slate-800 bg-slate-800 hidden">
