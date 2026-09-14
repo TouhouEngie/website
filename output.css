@@ -348,6 +348,12 @@
   .h-1 {
     height: calc(var(--spacing) * 1);
   }
+  .h-1\/2 {
+    height: calc(1/2 * 100%);
+  }
+  .h-2\/3 {
+    height: calc(2/3 * 100%);
+  }
   .h-3 {
     height: calc(var(--spacing) * 3);
   }
