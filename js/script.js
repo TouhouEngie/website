@@ -336,6 +336,10 @@ function pomodoroStart() {
   }
 }
 
+function projektStart() {
+  console.log("soon");
+}
+
 function setVolume() {
   var slider = document.getElementById("volumeslider")
   slider.addEventListener("input", function() {
