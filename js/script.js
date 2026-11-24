@@ -294,7 +294,7 @@ async function galleryStart() {
 }
 
 function gamedemoStart() {
-    $("#thing").html(`<iframe frameborder="0" src="https://itch.io/embed-upload/16740430?color=333333" allowfullscreen="" width="512" height="660"><a href="https://touhouengie.itch.io/falling-engie">Play Falling Engie on itch.io</a></iframe>`);
+    $("#thing").html(`<iframe frameborder="0" src="https://itch.io/embed-upload/16740430?color=333333" allowfullscreen="" width="1024" height="660"><a href="https://touhouengie.itch.io/falling-engie">Play Falling Engie on itch.io</a></iframe>`);
 }
 
 function interwebzStart() {
