@@ -19,6 +19,8 @@
     --color-blue-500: oklch(62.3% 0.214 259.815);
     --color-blue-800: oklch(42.4% 0.199 265.638);
     --color-purple-950: oklch(29.1% 0.149 302.717);
+    --color-slate-400: oklch(70.4% 0.04 256.788);
+    --color-slate-500: oklch(55.4% 0.046 257.417);
     --color-slate-800: oklch(27.9% 0.041 260.031);
     --color-gray-700: oklch(37.3% 0.034 259.733);
     --color-gray-800: oklch(27.8% 0.033 256.848);
@@ -713,6 +715,23 @@
       background-color: var(--color-sky-600);
     }
   }
+  .active\:border-4:active {
+    border-style: var(--tw-border-style);
+    border-width: 4px;
+  }
+  .active\:border-8:active {
+    border-style: var(--tw-border-style);
+    border-width: 8px;
+  }
+  .active\:border-slate-400:active {
+    border-color: var(--color-slate-400);
+  }
+  .active\:border-slate-500:active {
+    border-color: var(--color-slate-500);
+  }
+  .active\:border-white:active {
+    border-color: var(--color-white);
+  }
   .active\:bg-sky-600:active {
     background-color: var(--color-sky-600);
   }
@@ -759,6 +778,15 @@
     .sm\:h-160 {
       height: calc(var(--spacing) * 160);
     }
+    .sm\:h-163 {
+      height: calc(var(--spacing) * 163);
+    }
+    .sm\:h-165 {
+      height: calc(var(--spacing) * 165);
+    }
+    .sm\:h-170 {
+      height: calc(var(--spacing) * 170);
+    }
     .sm\:h-fit {
       height: fit-content;
     }
@@ -767,9 +795,6 @@
     }
     .sm\:w-42 {
       width: calc(var(--spacing) * 42);
-    }
-    .sm\:w-50 {
-      width: calc(var(--spacing) * 50);
     }
     .sm\:w-60 {
       width: calc(var(--spacing) * 60);
@@ -792,11 +817,20 @@
     .sm\:w-120 {
       width: calc(var(--spacing) * 120);
     }
+    .sm\:w-130 {
+      width: calc(var(--spacing) * 130);
+    }
+    .sm\:w-135 {
+      width: calc(var(--spacing) * 135);
+    }
     .sm\:w-140 {
       width: calc(var(--spacing) * 140);
     }
     .sm\:w-150 {
       width: calc(var(--spacing) * 150);
+    }
+    .sm\:w-160 {
+      width: calc(var(--spacing) * 160);
     }
     .sm\:w-170 {
       width: calc(var(--spacing) * 170);

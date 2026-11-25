@@ -50,7 +50,10 @@ function configureSettings() {
     setCookie('visualizer', false, 365);
   }
   function setVisualizer(flag) {
-    console.log(flag);
+    if (flag) {
+      let borders = $(".border-slate-800");
+      borders.addClass("active:border-white");
+    }
   }
 }
 
