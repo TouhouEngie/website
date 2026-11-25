@@ -86,6 +86,7 @@ $(function() {
 });
 
 
+/*
 function setOutsideCheckbox() {
   // all checkboxes (as of right now) live here. will find a more efficient way soon.
   if (enableCookies) {
@@ -94,6 +95,7 @@ function setOutsideCheckbox() {
     });
   }
 }
+*/
 
 // apply the settings from outside to inside
 async function getJsonData(url, file) {

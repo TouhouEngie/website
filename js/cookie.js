@@ -42,19 +42,6 @@ function configureSettings() {
   } else {   
     setCookie("cursor", "1", 365);
   }
-
-  // move this to the other js sometime
-  if (visualize != "") {
-    setVisualizer(visualize);
-  } else {
-    setCookie('visualizer', false, 365);
-  }
-  function setVisualizer(flag) {
-    if (flag) {
-      let borders = $(".border-slate-800");
-      borders.addClass("active:border-white");
-    }
-  }
 }
 
 function configureCursor(num) {
