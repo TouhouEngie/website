@@ -1,6 +1,6 @@
 // some things just need to be global
 // debug flag. keep this to True.
-const enableCookies = false;
+const enableCookies = true;
 
 const json = "https://fileserver.touhouengie.com/drive/webpage_data";
 var largestIndex = 1;
